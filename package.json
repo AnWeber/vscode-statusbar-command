@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "anweber",
     "engines": {
         "vscode": "^1.0.0"
@@ -32,7 +32,7 @@
             "type": "object",
             "title": "Statusbar Commands",
             "properties": {
-                "statusbar_config.commands": {
+                "statusbar_command.commands": {
                     "type": [
                         "array"
                     ],

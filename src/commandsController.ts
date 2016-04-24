@@ -16,7 +16,7 @@ export class CommandsController {
      * refresh config
      */
     initCommands() {
-        const config = workspace.getConfiguration('statusbar_config');
+        const config = workspace.getConfiguration('statusbar_command');
         this.disposeCommands();
 
         const configCommands: Array<any> = config.get<Array<any>>('commands');

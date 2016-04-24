@@ -4,10 +4,10 @@ extend the status bar with own commands.
 
 ## Usage
 
-* configure setting statusbar_config.commands
+* configure setting statusbar_command.commands
 
 ## Settings
-* statusbar_config.commands
+* statusbar_command.commands
     * array of commands to show in status bar
     * these properties are allowed for every item in the array
         * command: The identifier of a command to run on click.
