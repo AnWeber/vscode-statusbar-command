@@ -1,0 +1,119 @@
+{
+    "name": "statusbar-commands",
+    "displayName": "statusbar-commands",
+    "description": "extend the statusbar with own commands",
+    "version": "0.0.1",
+    "publisher": "anweber",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "keywords": [
+        "statusbar",
+        "command",
+        "toolbar"
+    ],
+    "icon": "icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/AnWeber/vscode-statusbar-command"
+    },
+    "bugs": {
+        "url": "https://github.com/AnWeber/vscode-statusbar-command/issues"
+    },
+    "main": "./out/src/extension",
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "Statusbar Commands",
+            "properties": {
+                "statusbar_config.commands": {
+                    "type": [
+                        "array"
+                    ],
+                    "default": [
+                        {
+                            "text": "$(gear)",
+                            "tooltip": "workspace settings",
+                            "alignment": "right",
+                            "command": "workbench.action.openWorkspaceSettings"
+                        }
+                    ],
+                    "description": "array of commands",
+                    "items": {
+                        "type": "object",
+                        "description": "command object",
+                        "properties": {
+                            "alignment": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "left",
+                                    "right"
+                                ],
+                                "description": "The alignment of this item."
+                            },
+                            "priority": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ],
+                                "description": "The priority of this item. Higher value means the item should be shown more to the left."
+                            },
+                            "color": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "The foreground color for this entry."
+                            },
+                            "command": {
+                                "type": "string",
+                                "description": "The identifier of a command to run on click."
+                            },
+                            "text": {
+                                "type": "string",
+                                "description": "The text to show for the entry. You can embed icons in the text by leveraging the syntax: \"$(icon name)\". Where the icon-name is taken from the octicon icon set"
+                            },
+                            "tooltip": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "The tooltip text when you hover over this entry."
+                            },
+                            "include": {
+                                "type": "string",
+                                "description": "if RegEx is valid, then the StatusbarItem is shown"
+                            },
+                            "exclude": {
+                                "type": "string",
+                                "description": "if RegEx is invalid, then the StatusbarItem is shown"
+                            }
+                        },
+                        "required": [
+                            "text",
+                            "command"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "typescript": "^1.8.5",
+        "vscode": "^0.11.0"
+    }
+}
