@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import {CommandsController} from './CommandsController';
+import {CommandsController} from './commandsController';
 
 
 export function activate(context: vscode.ExtensionContext) {
