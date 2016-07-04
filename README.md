@@ -37,6 +37,8 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v0.0.3
+    * error in c
 
 * v0.0.1
     * initial release
