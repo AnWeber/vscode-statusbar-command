@@ -1,6 +1,6 @@
 'use strict';
 import {window, workspace, WorkspaceEdit, Range, TextDocument, TextEditor} from 'vscode';
-import {Command} from './Command';
+import {Command} from './command';
 
 
 /**
