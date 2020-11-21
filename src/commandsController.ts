@@ -1,7 +1,7 @@
 'use strict';
-import {window, workspace, WorkspaceEdit, Range, TextDocument, TextEditor} from 'vscode';
+import {window, workspace, TextEditor} from 'vscode';
 import {StatusBarCommand} from './statusBarCommand';
-
+import { StatusBarItemConfig } from './statusBarItemConfig';
 
 /**
  * manage initialization of Commands
@@ -20,16 +20,11 @@ export class CommandsController {
         this.disposeCommands();
         this.commands = new Array<StatusBarCommand>();
 
-        let document: string | null  = null;
-        if (window.activeTextEditor) {
-            document = window.activeTextEditor.document.uri.toString();
-        }
-
-        const configCommands = config.get<Array<any>>('commands');
+        const configCommands = config.get<Array<StatusBarItemConfig>>('commands');
         if (configCommands) {
             this.commands.push(...configCommands.map(configEntry => {
                 const command = new StatusBarCommand(configEntry);
-                command.refresh(document);
+                command.refresh(window.activeTextEditor);
                 return command;
             }));
         }
@@ -41,8 +36,7 @@ export class CommandsController {
 
     onChangeTextEditor(textEditor: TextEditor | undefined) {
         if (textEditor) {
-            const document = textEditor.document.uri.toString();
-            this.commands.forEach(command => command.refresh(document));
+            this.commands.forEach(command => command.refresh(textEditor));
         }
     }
 
@@ -55,6 +49,4 @@ export class CommandsController {
     dispose() {
         this.disposeCommands();
     }
-
-
 }

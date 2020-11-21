@@ -1,17 +1,12 @@
-import { StatusBarAlignment, StatusBarItem, window, Disposable, commands } from 'vscode';
-
-
+import { StatusBarAlignment, StatusBarItem, window, Disposable, TextEditor } from 'vscode';
 import { StatusBarItemConfig } from './statusBarItemConfig';
 
 export class StatusBarCommand {
     private statusBarItem: StatusBarItem | undefined;
-    include!: RegExp;
-    exclude!: RegExp;
-    script!: string;
 
     registeredCommandDisposable!: Disposable;
 
-    constructor(config: StatusBarItemConfig) {
+    constructor(private readonly config: StatusBarItemConfig) {
         let alignment = StatusBarAlignment.Left;
         if (config.alignment === 'right') {
             alignment = StatusBarAlignment.Right;
@@ -33,24 +28,30 @@ export class StatusBarCommand {
         } else {
             this.statusBarItem.command = config.command;
         }
-
-        if (config.include) {
-            this.include = new RegExp(config.include);
-        }
-        if (config.exclude) {
-            this.exclude = new RegExp(config.exclude);
-        }
     }
 
-    refresh(documentUri: string | null) {
+    refresh(textEditor: TextEditor | undefined) {
         let visible = true;
         if (this.statusBarItem) {
-            if (this.include) {
-                console.log(this.include.source);
-                visible = !!documentUri && this.include.test(documentUri);
-            }
-            if (this.exclude) {
-                visible = !!documentUri && !this.exclude.test(documentUri);
+
+            if (textEditor && textEditor.document) {
+                if (!this.testRegex(this.config.filterLanguageId, textEditor.document.languageId)) {
+                    visible = false;
+                }
+                if (!this.testRegex(this.config.filterFileName, textEditor.document.fileName)) {
+                    visible = false;
+                }
+                if (!this.testRegex(this.config.filterText, textEditor.document.getText())) {
+                    visible = false;
+                }
+
+                const documentUri = textEditor?.document?.uri?.toString();
+                if (!this.testRegex(this.config.include, documentUri)) {
+                    visible = false;
+                }
+                if (this.config.exclude && this.testRegex(this.config.exclude, documentUri)) {
+                    visible = false;
+                }
             }
 
             if (visible) {
@@ -59,6 +60,10 @@ export class StatusBarCommand {
                 this.statusBarItem.hide();
             }
         }
+    }
+
+    private testRegex(pattern: string | undefined, value: string | undefined) {
+        return !pattern || value && RegExp(pattern).test(value);
     }
 
     dispose() {

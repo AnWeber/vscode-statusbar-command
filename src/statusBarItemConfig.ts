@@ -57,9 +57,21 @@ export interface StatusBarItemConfig{
         /**
          * if RegEx is valid, then the StatusbarItem is shown
          */
-        include?: RegExp;
+        include?: string;
         /**
          * if RegEx is valid, then the StatusbarItem is hidden
          */
-        exclude?: RegExp;
+        exclude?: string;
+        /**
+         * if regex match languageid
+         */
+        filterLanguageId?: string;
+        /**
+         * if regex match filename
+         */
+        filterFileName?: string;
+        /**
+         * if regex match text
+         */
+        filterText?: string;
 }

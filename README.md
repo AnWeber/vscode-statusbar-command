@@ -16,7 +16,10 @@ extend the status bar with own commands.
         * alignment: The alignment of this item (left, right).
         * priority: The priority of this item. Higher value means the item should be shown more to the left.
         * include: if RegEx is valid, then the StatusbarItem is shown
-        * exclude: if RegEx is invalid, then the StatusbarItem is shown
+        * exclude: if RegEx is invalid, then the StatusbarItem is shown/**
+        * filterLanguageId: if regex match languageid
+        * filterFileName: if regex match filename
+        * filterText: if regex match text
         * tooltip: The tooltip text when you hover over this entry.
         * color: The foreground color for this entry.
     * example
@@ -42,6 +45,9 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v1.0.0
+    * support arguments
+    * filter options extended
 * v0.0.3
     * error in c
 

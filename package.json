@@ -2,11 +2,11 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
-        "vscode": "^1.0.0"
+        "vscode": "^1.51.0"
     },
     "categories": [
         "Other"
@@ -27,7 +27,7 @@
     "bugs": {
         "url": "https://github.com/AnWeber/vscode-statusbar-command/issues"
     },
-	"main": "./out/extension.js",
+    "main": "./out/extension.js",
     "contributes": {
         "configuration": {
             "type": "object",
@@ -80,7 +80,9 @@
                                 "description": "The identifier of a command to run on click."
                             },
                             "arguments": {
-                                "type": ["array"],
+                                "type": [
+                                    "array"
+                                ],
                                 "description": "Arguments that the command handler should be invoked with."
                             },
                             "text": {
@@ -101,6 +103,18 @@
                             "exclude": {
                                 "type": "string",
                                 "description": "if RegEx is invalid, then the StatusbarItem is shown"
+                            },
+                            "filterLanguageId": {
+                                "type": "regex",
+                                "description": "if regex match languageid"
+                            },
+                            "filterFileName": {
+                                "type": "string",
+                                "description": "if regex match filename"
+                            },
+                            "filterText": {
+                                "type": "string",
+                                "description": "if regex match current text"
                             }
                         },
                         "required": [
