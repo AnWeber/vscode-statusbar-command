@@ -10,7 +10,8 @@ extend the status bar with own commands.
 * statusbar_command.commands
     * array of commands to show in status bar
     * these properties are allowed for every item in the array
-        * command: The identifier of a command to run on click.
+        * command: identifier of a command to run on click.
+        * arguments: Arguments that the command handler should be invoked with.
         * text: The text to show for the entry. You can embed icons in the text by leveraging the syntax: \"$(icon name)\". Where the icon-name is taken from the octicon icon set
         * alignment: The alignment of this item (left, right).
         * priority: The priority of this item. Higher value means the item should be shown more to the left.
@@ -32,6 +33,10 @@ extend the status bar with own commands.
         "priority": 100,
         "include": "\.js",
         "command": "editor.action.format"
+    },{
+        "text": "ctrl+h",
+        "command": "workbench.action.tasks.runTask",
+        "arguments": ["taskName"]
     }
 ]
 ```

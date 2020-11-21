@@ -4,6 +4,7 @@
     "description": "extend the statusbar with own commands",
     "version": "0.0.2",
     "publisher": "anweber",
+    "license": "ISC",
     "engines": {
         "vscode": "^1.0.0"
     },
@@ -26,7 +27,7 @@
     "bugs": {
         "url": "https://github.com/AnWeber/vscode-statusbar-command/issues"
     },
-    "main": "./out/src/extension",
+	"main": "./out/extension.js",
     "contributes": {
         "configuration": {
             "type": "object",
@@ -78,6 +79,10 @@
                                 "type": "string",
                                 "description": "The identifier of a command to run on click."
                             },
+                            "arguments": {
+                                "type": ["array"],
+                                "description": "Arguments that the command handler should be invoked with."
+                            },
                             "text": {
                                 "type": "string",
                                 "description": "The text to show for the entry. You can embed icons in the text by leveraging the syntax: \"$(icon name)\". Where the icon-name is taken from the octicon icon set"
@@ -108,12 +113,18 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "lint": "eslint . --ext .ts,.tsx",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile"
     },
     "devDependencies": {
-        "typescript": "^1.8.5",
-        "vscode": "^0.11.0"
+        "typescript": "^4.1.2",
+        "@types/node": "^14.14.9",
+        "@types/vscode": "^1.51.0",
+        "@typescript-eslint/eslint-plugin": "^4.8.1",
+        "@typescript-eslint/parser": "^4.8.1",
+        "eslint": "^7.14.0"
     }
 }
