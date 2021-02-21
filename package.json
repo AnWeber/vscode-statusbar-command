@@ -2,11 +2,11 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
-        "vscode": "^1.51.0"
+        "vscode": "^1.53.0"
     },
     "categories": [
         "Other"
@@ -75,6 +75,13 @@
                                 ],
                                 "description": "The foreground color for this entry."
                             },
+                            "backgroundColor": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "The background color for this entry."
+                            },
                             "command": {
                                 "type": "string",
                                 "description": "The identifier of a command to run on click."
@@ -134,11 +141,11 @@
         "pretest": "npm run compile"
     },
     "devDependencies": {
-        "typescript": "^4.1.2",
-        "@types/node": "^14.14.9",
-        "@types/vscode": "^1.51.0",
-        "@typescript-eslint/eslint-plugin": "^4.8.1",
-        "@typescript-eslint/parser": "^4.8.1",
-        "eslint": "^7.14.0"
+        "typescript": "^4.1.5",
+        "@types/node": "^14.14.31",
+        "@types/vscode": "^1.53.0",
+        "@typescript-eslint/eslint-plugin": "^4.15.1",
+        "@typescript-eslint/parser": "^4.15.1",
+        "eslint": "^7.20.0"
     }
 }

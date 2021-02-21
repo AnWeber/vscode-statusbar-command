@@ -34,6 +34,11 @@ export interface StatusBarItemConfig{
         color: string | undefined;
 
         /**
+         * the background color for this entry
+         */
+        backgroundColor: string | undefined;
+
+        /**
          * identifier of a command to run on click.
          *
          * The command must be [known](#commands.getCommands).

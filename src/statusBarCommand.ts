@@ -1,4 +1,4 @@
-import { StatusBarAlignment, StatusBarItem, window, Disposable, TextEditor } from 'vscode';
+import { StatusBarAlignment, StatusBarItem, window, Disposable, TextEditor, ThemeColor } from 'vscode';
 import { StatusBarItemConfig } from './statusBarItemConfig';
 
 export class StatusBarCommand {
@@ -18,6 +18,9 @@ export class StatusBarCommand {
         this.statusBarItem.accessibilityInformation = config.accessibilityInformation;
         this.statusBarItem.text = config.text;
         this.statusBarItem.tooltip = config.tooltip;
+        if (config.backgroundColor) {
+            this.statusBarItem.backgroundColor = new ThemeColor(config.backgroundColor);
+        }
 
         if (config.arguments) {
             this.statusBarItem.command = {

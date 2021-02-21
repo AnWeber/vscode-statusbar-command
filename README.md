@@ -45,6 +45,8 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v1.1.0
+    * support backgroundcolor (only statusBarItem.errorBackground at the moment)
 * v1.0.0
     * support arguments
     * filter options extended
