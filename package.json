@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -27,7 +27,7 @@
     "bugs": {
         "url": "https://github.com/AnWeber/vscode-statusbar-command/issues"
     },
-    "main": "./out/extension.js",
+    "main": "./dist/extension.js",
     "contributes": {
         "configuration": {
             "type": "object",
