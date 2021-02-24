@@ -22,6 +22,8 @@ extend the status bar with own commands.
         * filterText: if regex match text
         * tooltip: The tooltip text when you hover over this entry.
         * color: The foreground color for this entry.
+        * backgroundcolor: The background color for this entry (only statusBarItem.errorBackground supported by vscode)
+
     * example
 ```
 [{
@@ -45,6 +47,8 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v1.2.0
+    * arguments prefixed with uri|, position|, range| gets to type (useful for command vscode.openFolder)
 * v1.1.0
     * support backgroundcolor (only statusBarItem.errorBackground at the moment)
 * v1.0.0
