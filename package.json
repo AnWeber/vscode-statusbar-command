@@ -138,8 +138,7 @@
         "compile": "webpack --config ./webpack.config.js",
         "watch": "webpack --watch --config ./webpack.config.js",
         "package": "webpack --mode production --devtool hidden-source-map --config ./webpack.config.js",
-        "lint": "eslint src --ext ts",
-        "deploy": "vsce publish"
+        "lint": "eslint src --ext ts"
     },
     "devDependencies": {
         "@types/node": "^14.14.31",
@@ -149,7 +148,6 @@
         "eslint": "^7.20.0",
         "ts-loader": "^8.0.17",
         "typescript": "^4.2.2",
-        "vsce": "^1.85.0",
         "webpack": "^5.24.1",
         "webpack-cli": "^4.5.0"
     }
