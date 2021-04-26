@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -118,6 +118,10 @@
                             "filterFileName": {
                                 "type": "string",
                                 "description": "if regex match filename"
+                            },
+                            "filterFilepath": {
+                                "type": "string",
+                                "description": "if regex match filepath"
                             },
                             "filterText": {
                                 "type": "string",

@@ -47,6 +47,8 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v1.3.0
+    * regex for filter file path added
 * v1.2.0
     * arguments prefixed with uri|, position|, range| gets to type (useful for command vscode.openFolder)
 * v1.1.0

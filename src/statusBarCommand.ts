@@ -75,9 +75,12 @@ export class StatusBarCommand {
                 if (!this.testRegex(this.config.filterFileName, textEditor.document.fileName)) {
                     visible = false;
                 }
-                if (!this.testRegex(this.config.filterText, textEditor.document.getText())) {
+                if (!this.testRegex(this.config.filterFilepath, textEditor.document.uri.fsPath)) {
                     visible = false;
                 }
+                if (!this.testRegex(this.config.filterText, textEditor.document.getText())) {
+                    visible = false;
+                };
 
                 const documentUri = textEditor?.document?.uri?.toString();
                 if (!this.testRegex(this.config.include, documentUri)) {

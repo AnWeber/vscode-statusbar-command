@@ -76,6 +76,10 @@ export interface StatusBarItemConfig{
          */
         filterFileName?: string;
         /**
+         * if regex match filepath
+         */
+        filterFilepath?: string;
+        /**
          * if regex match text
          */
         filterText?: string;
