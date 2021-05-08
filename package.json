@@ -29,6 +29,7 @@
     },
     "main": "./dist/extension.js",
     "capabilities": {
+        "virtualWorkspaces": true,
         "untrustedWorkspaces": {
           "supported": "limited",
           "restrictedConfigurations": [
