@@ -47,6 +47,10 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v1.4.0
+    * support workspace trust
+    * support virtual workspaces
+    * fix lodash security warning
 * v1.3.0
     * regex for filter file path added
 * v1.2.0
