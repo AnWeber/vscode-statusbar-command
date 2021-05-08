@@ -28,6 +28,14 @@
         "url": "https://github.com/AnWeber/vscode-statusbar-command/issues"
     },
     "main": "./dist/extension.js",
+    "capabilities": {
+        "untrustedWorkspaces": {
+          "supported": "limited",
+          "restrictedConfigurations": [
+            "statusbar_command.commands"
+          ]
+        }
+      },
     "contributes": {
         "configuration": {
             "type": "object",
