@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -92,7 +92,10 @@
                                 "description": "The background color for this entry."
                             },
                             "command": {
-                                "type": "string",
+                                "type":[
+                                    "string",
+                                    "null"
+                                ] ,
                                 "description": "The identifier of a command to run on click."
                             },
                             "arguments": {
