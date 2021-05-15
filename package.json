@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -46,9 +46,24 @@
                     "type": [
                         "array"
                     ],
+                    "scope": "resource",
                     "default": [
                         {
                             "text": "$(gear)",
+                            "tooltip": "workspace settings",
+                            "alignment": "right",
+                            "command": "workbench.action.openWorkspaceSettings"
+                        },{
+                            "text": "$(callstack-view-icon)",
+                            "tooltip": "workspace settings",
+                            "alignment": "right",
+                            "command": "workbench.action.openWorkspaceSettings"
+                        },{
+                            "text": " ",
+                            "tooltip": "workspace settings",
+                            "alignment": "right"
+                        },{
+                            "text": "$(comments-view-icon)",
                             "tooltip": "workspace settings",
                             "alignment": "right",
                             "command": "workbench.action.openWorkspaceSettings"
@@ -92,10 +107,7 @@
                                 "description": "The background color for this entry."
                             },
                             "command": {
-                                "type":[
-                                    "string",
-                                    "null"
-                                ] ,
+                                "type": "string",
                                 "description": "The identifier of a command to run on click."
                             },
                             "arguments": {
@@ -141,8 +153,100 @@
                             }
                         },
                         "required": [
-                            "text",
-                            "command"
+                            "text"
+                        ]
+                    }
+                },
+                "statusbar_command.applicationCommands": {
+                    "type": [
+                        "array"
+                    ],
+                    "scope": "application",
+                    "description": "array of commands",
+                    "items": {
+                        "type": "object",
+                        "description": "command object",
+                        "properties": {
+                            "alignment": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "left",
+                                    "right"
+                                ],
+                                "description": "The alignment of this item."
+                            },
+                            "priority": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ],
+                                "description": "The priority of this item. Higher value means the item should be shown more to the left."
+                            },
+                            "color": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "The foreground color for this entry."
+                            },
+                            "backgroundColor": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "The background color for this entry."
+                            },
+                            "command": {
+                                "type": "string",
+                                "description": "The identifier of a command to run on click."
+                            },
+                            "arguments": {
+                                "type": [
+                                    "array"
+                                ],
+                                "description": "Arguments that the command handler should be invoked with."
+                            },
+                            "text": {
+                                "type": "string",
+                                "description": "The text to show for the entry. You can embed icons in the text by leveraging the syntax: \"$(icon name)\". Where the icon-name is taken from the octicon icon set"
+                            },
+                            "tooltip": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "description": "The tooltip text when you hover over this entry."
+                            },
+                            "include": {
+                                "type": "string",
+                                "description": "if RegEx is valid, then the StatusbarItem is shown"
+                            },
+                            "exclude": {
+                                "type": "string",
+                                "description": "if RegEx is invalid, then the StatusbarItem is shown"
+                            },
+                            "filterLanguageId": {
+                                "type": "regex",
+                                "description": "if regex match languageid"
+                            },
+                            "filterFileName": {
+                                "type": "string",
+                                "description": "if regex match filename"
+                            },
+                            "filterFilepath": {
+                                "type": "string",
+                                "description": "if regex match filepath"
+                            },
+                            "filterText": {
+                                "type": "string",
+                                "description": "if regex match current text"
+                            }
+                        },
+                        "required": [
+                            "text"
                         ]
                     }
                 }
@@ -158,17 +262,17 @@
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^15.0.2",
+        "@types/node": "^15.3.0",
         "@types/vscode": "^1.56.0",
-        "@typescript-eslint/eslint-plugin": "^4.22.1",
-        "@typescript-eslint/parser": "^4.22.1",
+        "@typescript-eslint/eslint-plugin": "^4.23.0",
+        "@typescript-eslint/parser": "^4.23.0",
         "eslint": "^7.26.0",
-        "fork-ts-checker-webpack-plugin": "^6.2.6",
+        "fork-ts-checker-webpack-plugin": "^6.2.9",
         "lockfile-lint": "^4.6.2",
+        "thread-loader": "^3.0.4",
         "ts-loader": "^9.1.2",
-		"thread-loader": "^3.0.3",
         "typescript": "^4.2.4",
-        "webpack": "^5.36.2",
+        "webpack": "^5.37.0",
         "webpack-cli": "^4.7.0"
     }
 }

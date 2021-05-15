@@ -22,12 +22,18 @@ export class CommandsController {
 
       const configCommands = config.get<Array<StatusBarItemConfig>>('commands');
       if (configCommands) {
-        this.commands.push(...configCommands.map(configEntry => {
-          const command = new StatusBarCommand(configEntry);
-          command.refresh(vscode.window.activeTextEditor);
-          return command;
-        }));
+        this.commands.push(...configCommands.map(configEntry => this.createCommand(configEntry)));
       }
+      const applicationCommands = config.get<Array<StatusBarItemConfig>>('applicationCommands');
+      if (applicationCommands) {
+        this.commands.push(...applicationCommands.map(configEntry => this.createCommand(configEntry)));
+      }
+    }
+
+    private createCommand(configEntry: StatusBarItemConfig) {
+      const command = new StatusBarCommand(configEntry);
+      command.refresh(vscode.window.activeTextEditor);
+      return command;
     }
 
     onChangeConfiguration() : void {

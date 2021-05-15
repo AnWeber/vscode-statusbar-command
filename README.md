@@ -47,6 +47,8 @@ extend the status bar with own commands.
 ```
 
 ## Changelog
+* v1.6.0
+    * allow application commands, which are not overriden by workspace commands
 * v1.5.0
     * make command optional
 * v1.4.0
