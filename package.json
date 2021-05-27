@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -53,16 +53,19 @@
                             "tooltip": "workspace settings",
                             "alignment": "right",
                             "command": "workbench.action.openWorkspaceSettings"
-                        },{
+                        },
+                        {
                             "text": "$(callstack-view-icon)",
                             "tooltip": "workspace settings",
                             "alignment": "right",
                             "command": "workbench.action.openWorkspaceSettings"
-                        },{
+                        },
+                        {
                             "text": " ",
                             "tooltip": "workspace settings",
                             "alignment": "right"
-                        },{
+                        },
+                        {
                             "text": "$(comments-view-icon)",
                             "tooltip": "workspace settings",
                             "alignment": "right",
@@ -262,17 +265,17 @@
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^15.3.0",
+        "@types/node": "^15.6.1",
         "@types/vscode": "^1.56.0",
-        "@typescript-eslint/eslint-plugin": "^4.23.0",
-        "@typescript-eslint/parser": "^4.23.0",
-        "eslint": "^7.26.0",
-        "fork-ts-checker-webpack-plugin": "^6.2.9",
+        "@typescript-eslint/eslint-plugin": "^4.25.0",
+        "@typescript-eslint/parser": "^4.25.0",
+        "eslint": "^7.27.0",
+        "fork-ts-checker-webpack-plugin": "^6.2.10",
         "lockfile-lint": "^4.6.2",
         "thread-loader": "^3.0.4",
-        "ts-loader": "^9.1.2",
-        "typescript": "^4.2.4",
-        "webpack": "^5.37.0",
+        "ts-loader": "^9.2.2",
+        "typescript": "^4.3.2",
+        "webpack": "^5.37.1",
         "webpack-cli": "^4.7.0"
     }
 }
