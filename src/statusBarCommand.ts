@@ -31,10 +31,15 @@ export class StatusBarCommand {
         alignment = vscode.StatusBarAlignment.Right;
       }
 
-      this.statusBarItem = vscode.window.createStatusBarItem(alignment, config.priority);
+      if (config.id) {
+        this.statusBarItem = vscode.window.createStatusBarItem(config.id, alignment, config.priority);
+      } else {
+        this.statusBarItem = vscode.window.createStatusBarItem(alignment, config.priority);
+      }
 
       this.statusBarItem.color = config.color;
       this.statusBarItem.accessibilityInformation = config.accessibilityInformation;
+      this.statusBarItem.name = config.name;
       this.statusBarItem.text = config.text;
       this.statusBarItem.tooltip = config.tooltip;
       if (config.backgroundColor) {

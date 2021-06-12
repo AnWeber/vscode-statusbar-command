@@ -7,46 +7,54 @@ extend the status bar with own commands.
 * configure setting statusbar_command.commands
 
 ## Settings
-* statusbar_command.commands
-    * array of commands to show in status bar
-    * these properties are allowed for every item in the array
-        * command: identifier of a command to run on click.
-        * arguments: Arguments that the command handler should be invoked with.
-        * text: The text to show for the entry. You can embed icons in the text by leveraging the syntax: \"$(icon name)\". Where the icon-name is taken from the octicon icon set
-        * alignment: The alignment of this item (left, right).
-        * priority: The priority of this item. Higher value means the item should be shown more to the left.
-        * include: if RegEx is valid, then the StatusbarItem is shown
-        * exclude: if RegEx is invalid, then the StatusbarItem is shown/**
-        * filterLanguageId: if regex match languageid
-        * filterFileName: if regex match filename
-        * filterText: if regex match text
-        * tooltip: The tooltip text when you hover over this entry.
-        * color: The foreground color for this entry.
-        * backgroundcolor: The background color for this entry (only statusBarItem.errorBackground supported by vscode)
+* statusbar_command.commands is an array of [StatusBarItemConfig](https://github.com/AnWeber/vscode-statusbar-command/blob/main/src/statusBarItemConfig.ts). Each entry is converted to a StatusBarItem.
 
-    * example
+
+## Example
 ```
-[{
-        "text": "$(gear)",
-        "tooltip": "workspace settings",
-        "alignment": "right",
-        "command": "workbench.action.openWorkspaceSettings"
-    },{
+{
+"statusbar_command.commands": [
+    {
+      "text": "$(gear)",
+      "tooltip": "workspace settings",
+      "priority": -1000,
+      "alignment": "right",
+      "command": "workbench.action.openWorkspaceSettings"
+    },
+    {
         "text": "$(file-text)",
         "tooltip": "format",
         "alignment": "left",
         "priority": 100,
         "include": "\.js",
         "command": "editor.action.formatDocument"
+    },
+    {
+      "text": "TS",
+      "tooltip": "Typescript Server neustarten",
+      "alignment": "right",
+      "priority": 1000,
+      "command": "typescript.restartTsServer"
+    },
+    {
+      "text": "$(terminal)",
+      "tooltip": "Terminal",
+      "alignment": "right",
+      "priority": 1000,
+      "command": "workbench.action.terminal.toggleTerminal"
     },{
         "text": "ctrl+h",
         "command": "workbench.action.tasks.runTask",
         "arguments": ["taskName"]
     }
-]
+  ]
+}
 ```
 
 ## Changelog
+
+* v1.7.0
+    * support id and name of StatusbarItem
 * v1.6.0
     * allow application commands, which are not overriden by workspace commands
 * v1.5.0
