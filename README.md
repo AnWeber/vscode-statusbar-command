@@ -37,7 +37,7 @@ extend the status bar with own commands.
         "alignment": "left",
         "priority": 100,
         "include": "\.js",
-        "command": "editor.action.format"
+        "command": "editor.action.formatDocument"
     },{
         "text": "ctrl+h",
         "command": "workbench.action.tasks.runTask",
