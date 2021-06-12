@@ -61,7 +61,7 @@ export interface StatusBarItemConfig {
    * Note that if this is a [`Command`](#Command) object, only the [`command`](#Command.command) and [`arguments`](#Command.arguments)
    * are used by VS Code.
    */
-  command?: string;
+  command: string;
 
 
   /**
