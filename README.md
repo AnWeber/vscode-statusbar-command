@@ -65,6 +65,8 @@ extend the status bar with own commands.
 
 ## Changelog
 
+* v1.8.0
+    * arguments prefixed with number|, float|, activeDocument|, activeTextEditor| are converted
 * v1.7.1
     * removed defaults commands
 * v1.7.0
