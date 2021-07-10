@@ -80,7 +80,6 @@ export class StatusBarCommand {
     this.statusBarItem.name = config.name;
     this.statusBarItem.text = config.text;
     this.statusBarItem.tooltip = config.tooltip;
-    this.statusBarItem.tooltip
     if (config.backgroundColor) {
       this.statusBarItem.backgroundColor = new vscode.ThemeColor(config.backgroundColor);
     }
