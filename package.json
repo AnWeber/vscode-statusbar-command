@@ -2,11 +2,11 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.8.0",
+    "version": "1.9.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
-        "vscode": "^1.58.0"
+        "vscode": "^1.58.1"
     },
     "categories": [
         "Other"
@@ -47,14 +47,6 @@
                         "array"
                     ],
                     "scope": "resource",
-                    "default": [
-                        {
-                            "text": "$(gear)",
-                            "tooltip": "workspace settings",
-                            "alignment": "right",
-                            "command": "workbench.action.openWorkspaceSettings"
-                        }
-                    ],
                     "description": "array of commands",
                     "items": {
                         "type": "object",
@@ -256,17 +248,17 @@
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^16.3.0",
-        "@types/vscode": "1.58.0",
-        "@typescript-eslint/eslint-plugin": "^4.28.2",
-        "@typescript-eslint/parser": "^4.28.2",
-        "eslint": "^7.30.0",
-        "fork-ts-checker-webpack-plugin": "^6.2.12",
+        "@types/node": "^16.4.5",
+        "@types/vscode": "1.58.1",
+        "@typescript-eslint/eslint-plugin": "^4.28.5",
+        "@typescript-eslint/parser": "^4.28.5",
+        "eslint": "^7.31.0",
+        "fork-ts-checker-webpack-plugin": "^6.2.13",
         "lockfile-lint": "^4.6.2",
         "thread-loader": "^3.0.4",
-        "ts-loader": "^9.2.3",
+        "ts-loader": "^9.2.4",
         "typescript": "^4.3.5",
-        "webpack": "^5.44.0",
+        "webpack": "^5.47.0",
         "webpack-cli": "^4.7.2"
     }
 }

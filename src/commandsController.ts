@@ -9,14 +9,14 @@ export class CommandsController {
     private commands: Array<StatusBarCommand> = [];
 
     constructor() {
-      this.refresh();
+      this.refresh(vscode.window.activeTextEditor);
     }
 
     /**
      * refresh config
      */
-    public refresh() : void {
-      const config = vscode.workspace.getConfiguration('statusbar_command');
+    public refresh(textEditor: vscode.TextEditor | undefined) : void {
+      const config = vscode.workspace.getConfiguration('statusbar_command', textEditor?.document?.uri);
       this.disposeCommands();
       this.commands = [];
 
@@ -37,7 +37,7 @@ export class CommandsController {
     }
 
     onChangeConfiguration() : void {
-      this.refresh();
+      this.refresh(vscode.window.activeTextEditor);
     }
 
     onChangeTextEditor(textEditor: vscode.TextEditor | undefined) : void {
