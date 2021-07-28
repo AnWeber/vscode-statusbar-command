@@ -1,3 +1,7 @@
+## v1.9.0
+* remove default settings
+
+
 ## v1.8.0
 * arguments prefixed with number|, float|, activeDocument|, activeTextEditor| are converted
 
