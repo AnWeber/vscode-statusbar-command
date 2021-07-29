@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.9.0",
+    "version": "1.9.1",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -122,7 +122,7 @@
                                 "description": "if RegEx is invalid, then the StatusbarItem is shown"
                             },
                             "filterLanguageId": {
-                                "type": "regex",
+                                "type": "string",
                                 "description": "if regex match languageid"
                             },
                             "filterFileName": {
@@ -215,7 +215,7 @@
                                 "description": "if RegEx is invalid, then the StatusbarItem is shown"
                             },
                             "filterLanguageId": {
-                                "type": "regex",
+                                "type": "string",
                                 "description": "if regex match languageid"
                             },
                             "filterFileName": {

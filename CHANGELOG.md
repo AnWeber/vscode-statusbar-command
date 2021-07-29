@@ -1,3 +1,6 @@
+## v1.9.1
+* fix filterLanguageid (string instead of regex)
+
 ## v1.9.0
 * remove default settings
 
