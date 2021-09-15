@@ -1,3 +1,7 @@
+## v1.10.0
+* add optional flag property for every regex
+
+
 ## v1.9.1
 * fix filterLanguageid (string instead of regex)
 

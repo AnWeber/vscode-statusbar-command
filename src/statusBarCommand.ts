@@ -109,24 +109,24 @@ export class StatusBarCommand {
     if (this.statusBarItem) {
 
       if (textEditor && textEditor.document) {
-        if (!this.testRegex(this.config.filterLanguageId, textEditor.document.languageId)) {
+        if (!this.testRegex(this.config.filterLanguageId, this.config.filterLanguageIdFlags, textEditor.document.languageId)) {
           visible = false;
         }
-        if (!this.testRegex(this.config.filterFileName, textEditor.document.fileName)) {
+        if (!this.testRegex(this.config.filterFileName, this.config.filterFileNameFlags, textEditor.document.fileName)) {
           visible = false;
         }
-        if (!this.testRegex(this.config.filterFilepath, textEditor.document.uri.fsPath)) {
+        if (!this.testRegex(this.config.filterFilepath, this.config.filterFilepathFlags, textEditor.document.uri.fsPath)) {
           visible = false;
         }
-        if (!this.testRegex(this.config.filterText, textEditor.document.getText())) {
+        if (!this.testRegex(this.config.filterText, this.config.filterTextFlags, textEditor.document.getText())) {
           visible = false;
         }
 
         const documentUri = textEditor?.document?.uri?.toString();
-        if (!this.testRegex(this.config.include, documentUri)) {
+        if (!this.testRegex(this.config.include, this.config.includeFlags, documentUri)) {
           visible = false;
         }
-        if (this.config.exclude && this.testRegex(this.config.exclude, documentUri)) {
+        if (this.config.exclude && this.testRegex(this.config.exclude, this.config.excludeFlags, documentUri)) {
           visible = false;
         }
       }
@@ -139,8 +139,8 @@ export class StatusBarCommand {
     }
   }
 
-  private testRegex(pattern: string | undefined, value: string | undefined) {
-    return !pattern || value && RegExp(pattern, 'u').test(value);
+  private testRegex(pattern: string | undefined, flags: string | undefined, value: string | undefined) {
+    return !pattern || value && RegExp(pattern, flags || 'u').test(value);
   }
 
   dispose(): void {

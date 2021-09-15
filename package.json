@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.9.1",
+    "version": "1.10.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -117,25 +117,49 @@
                                 "type": "string",
                                 "description": "if RegEx is valid, then the StatusbarItem is shown"
                             },
+                            "includeFlags": {
+                                "type": "string",
+                                "description": "regex pattern for include"
+                            },
                             "exclude": {
                                 "type": "string",
                                 "description": "if RegEx is invalid, then the StatusbarItem is shown"
+                            },
+                            "excludeFlags": {
+                                "type": "string",
+                                "description": "regex pattern for exclude"
                             },
                             "filterLanguageId": {
                                 "type": "string",
                                 "description": "if regex match languageid"
                             },
+                            "filterLanguageIdFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterLanguageId"
+                            },
                             "filterFileName": {
                                 "type": "string",
                                 "description": "if regex match filename"
+                            },
+                            "filterFileNameFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterFileName"
                             },
                             "filterFilepath": {
                                 "type": "string",
                                 "description": "if regex match filepath"
                             },
+                            "filterFilepathFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterFilepath"
+                            },
                             "filterText": {
                                 "type": "string",
                                 "description": "if regex match current text"
+                            },
+                            "filterTextFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterText"
                             }
                         },
                         "required": [
@@ -210,25 +234,49 @@
                                 "type": "string",
                                 "description": "if RegEx is valid, then the StatusbarItem is shown"
                             },
+                            "includeFlags": {
+                                "type": "string",
+                                "description": "regex pattern for include"
+                            },
                             "exclude": {
                                 "type": "string",
                                 "description": "if RegEx is invalid, then the StatusbarItem is shown"
+                            },
+                            "excludeFlags": {
+                                "type": "string",
+                                "description": "regex pattern for exclude"
                             },
                             "filterLanguageId": {
                                 "type": "string",
                                 "description": "if regex match languageid"
                             },
+                            "filterLanguageIdFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterLanguageId"
+                            },
                             "filterFileName": {
                                 "type": "string",
                                 "description": "if regex match filename"
+                            },
+                            "filterFileNameFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterFileName"
                             },
                             "filterFilepath": {
                                 "type": "string",
                                 "description": "if regex match filepath"
                             },
+                            "filterFilepathFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterFilepath"
+                            },
                             "filterText": {
                                 "type": "string",
                                 "description": "if regex match current text"
+                            },
+                            "filterTextFlags": {
+                                "type": "string",
+                                "description": "regex pattern for filterText"
                             }
                         },
                         "required": [
@@ -248,17 +296,17 @@
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^16.4.5",
+        "@types/node": "^16.9.1",
         "@types/vscode": "1.58.1",
-        "@typescript-eslint/eslint-plugin": "^4.28.5",
-        "@typescript-eslint/parser": "^4.28.5",
-        "eslint": "^7.31.0",
-        "fork-ts-checker-webpack-plugin": "^6.2.13",
+        "@typescript-eslint/eslint-plugin": "^4.31.1",
+        "@typescript-eslint/parser": "^4.31.1",
+        "eslint": "^7.32.0",
+        "fork-ts-checker-webpack-plugin": "^6.3.3",
         "lockfile-lint": "^4.6.2",
         "thread-loader": "^3.0.4",
-        "ts-loader": "^9.2.4",
-        "typescript": "^4.3.5",
-        "webpack": "^5.47.0",
-        "webpack-cli": "^4.7.2"
+        "ts-loader": "^9.2.5",
+        "typescript": "^4.4.3",
+        "webpack": "^5.52.1",
+        "webpack-cli": "^4.8.0"
     }
 }

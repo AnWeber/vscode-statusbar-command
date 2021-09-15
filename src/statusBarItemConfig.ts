@@ -80,9 +80,19 @@ export interface StatusBarItemConfig {
   include?: string;
 
   /**
+   * regex flags for include
+   */
+   includeFlags?: string;
+
+  /**
    * if RegEx is valid, then the StatusbarItem is hidden
    */
   exclude?: string;
+
+  /**
+   * regex flags for exclude
+   */
+   excludeFlags?: string;
 
   /**
    * if regex match languageid
@@ -90,9 +100,19 @@ export interface StatusBarItemConfig {
   filterLanguageId?: string;
 
   /**
+   * regex flags for filterLanguageId
+   */
+   filterLanguageIdFlags?: string;
+
+  /**
    * if regex match filename
    */
   filterFileName?: string;
+
+  /**
+   * regex flags for filterFileName
+   */
+   filterFileNameFlags?: string;
 
   /**
    * if regex match filepath
@@ -100,7 +120,17 @@ export interface StatusBarItemConfig {
   filterFilepath?: string;
 
   /**
+   * regex flags for filterFilepath
+   */
+  filterFilepathFlags?: string;
+
+  /**
    * if regex match text
    */
   filterText?: string;
+
+  /**
+   * regex flags for filterText
+   */
+   filterTextFlags?: string;
 }
