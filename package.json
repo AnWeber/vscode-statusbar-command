@@ -2,11 +2,11 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "1.10.0",
+    "version": "2.0.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
-        "vscode": "^1.58.1"
+        "vscode": "^1.60.0"
     },
     "categories": [
         "Other"
@@ -28,6 +28,7 @@
         "url": "https://github.com/AnWeber/vscode-statusbar-command/issues"
     },
     "main": "./dist/extension.js",
+    "browser": "dist/browser.js",
     "capabilities": {
         "virtualWorkspaces": true,
         "untrustedWorkspaces": {
@@ -288,25 +289,23 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "webpack --mode production --config ./webpack.config.js",
-        "watch": "webpack --mode development --watch --config ./webpack.config.js",
+        "vscode:prepublish": "npm run compile && npm run compile-web",
+        "compile": "esbuild ./src/extension.ts --bundle --outdir=dist/ --minify --sourcemap --platform=node --external:vscode --format=cjs",
+        "watch": "npm run compile -- --watch",
+        "compile-web": "esbuild ./src/extension.ts --bundle --outfile=dist/browser.js --sourcemap --platform=browser --format=cjs --external:vscode",
+        "watch-web": "npm run compile-web -- --watch",
         "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
         "eslint": "eslint src --ext ts",
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^16.9.1",
-        "@types/vscode": "1.58.1",
-        "@typescript-eslint/eslint-plugin": "^4.31.1",
-        "@typescript-eslint/parser": "^4.31.1",
+        "@types/node": "^16.10.1",
+        "@types/vscode": "1.60.0",
+        "@typescript-eslint/eslint-plugin": "^4.32.0",
+        "@typescript-eslint/parser": "^4.32.0",
+        "esbuild": "^0.13.2",
         "eslint": "^7.32.0",
-        "fork-ts-checker-webpack-plugin": "^6.3.3",
         "lockfile-lint": "^4.6.2",
-        "thread-loader": "^3.0.4",
-        "ts-loader": "^9.2.5",
-        "typescript": "^4.4.3",
-        "webpack": "^5.52.1",
-        "webpack-cli": "^4.8.0"
+        "typescript": "^4.4.3"
     }
 }

@@ -1,3 +1,8 @@
+## v2.0.0
+* support for github.dev (experimental)
+* use esbuild instead of webpack
+
+
 ## v1.10.0
 * add optional flag property for every regex
 
