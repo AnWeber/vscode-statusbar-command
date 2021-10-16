@@ -1,3 +1,6 @@
+## v2.1.0
+* support warning background color
+
 ## v2.0.0
 * support for github.dev (experimental)
 * use esbuild instead of webpack

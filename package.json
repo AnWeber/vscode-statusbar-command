@@ -2,11 +2,11 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
-        "vscode": "^1.60.0"
+        "vscode": "^1.61.0"
     },
     "categories": [
         "Other"
@@ -82,6 +82,10 @@
                                 "type": [
                                     "string",
                                     "null"
+                                ],
+                                "enum": [
+                                    "statusBarItem.warningBackground",
+                                    "statusBarItem.errorBackground"
                                 ],
                                 "description": "The background color for this entry."
                             },
@@ -208,6 +212,10 @@
                                     "string",
                                     "null"
                                 ],
+                                "enum": [
+                                    "statusBarItem.warningBackground",
+                                    "statusBarItem.errorBackground"
+                                ],
                                 "description": "The background color for this entry."
                             },
                             "command": {
@@ -299,13 +307,13 @@
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^16.10.1",
-        "@types/vscode": "1.60.0",
-        "@typescript-eslint/eslint-plugin": "^4.32.0",
-        "@typescript-eslint/parser": "^4.32.0",
-        "esbuild": "^0.13.2",
-        "eslint": "^7.32.0",
+        "@types/node": "^16.11.0",
+        "@types/vscode": "^1.61.0",
+        "@typescript-eslint/eslint-plugin": "^5.0.0",
+        "@typescript-eslint/parser": "^5.0.0",
+        "esbuild": "^0.13.7",
+        "eslint": "^8.0.1",
         "lockfile-lint": "^4.6.2",
-        "typescript": "^4.4.3"
+        "typescript": "^4.4.4"
     }
 }
