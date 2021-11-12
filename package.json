@@ -307,12 +307,12 @@
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^16.11.0",
+        "@types/node": "^16.11.7",
         "@types/vscode": "^1.61.0",
-        "@typescript-eslint/eslint-plugin": "^5.0.0",
-        "@typescript-eslint/parser": "^5.0.0",
-        "esbuild": "^0.13.7",
-        "eslint": "^8.0.1",
+        "@typescript-eslint/eslint-plugin": "^5.3.1",
+        "@typescript-eslint/parser": "^5.3.1",
+        "esbuild": "^0.13.13",
+        "eslint": "^8.2.0",
         "lockfile-lint": "^4.6.2",
         "typescript": "^4.4.4"
     }
