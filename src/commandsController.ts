@@ -7,43 +7,48 @@ import { StatusBarItemConfig } from './statusBarItemConfig';
  */
 export class CommandsController {
   private commands: Array<StatusBarCommand> = [];
+  private configChangeDisposable: vscode.Disposable;
+  private changeActiveTextEditorDisposable: vscode.Disposable;
+
+  private prevConfig = '';
 
   constructor() {
-    this.refresh(vscode.window.activeTextEditor);
+    this.configChangeDisposable = vscode.workspace.onDidChangeConfiguration(this.onChangeConfiguration, this);
+    this.changeActiveTextEditorDisposable = vscode.window.onDidChangeActiveTextEditor(this.onChangeTextEditor, this);
+    this.init(vscode.window.activeTextEditor);
   }
 
   /**
-     * refresh config
-     */
-  public refresh(textEditor: vscode.TextEditor | undefined) : void {
+   * refresh config
+   */
+  public init(textEditor: vscode.TextEditor | undefined): void {
     const config = vscode.workspace.getConfiguration('statusbar_command', textEditor?.document?.uri);
-    this.disposeCommands();
-    this.commands = [];
+    const configCommands = [
+      ...config.get<Array<StatusBarItemConfig>>('commands') || [],
+      ...config.get<Array<StatusBarItemConfig>>('applicationCommands') || []
+    ];
 
-    const configCommands = config.get<Array<StatusBarItemConfig>>('commands');
-    if (configCommands) {
-      this.commands.push(...configCommands.map(configEntry => this.createCommand(configEntry)));
-    }
-    const applicationCommands = config.get<Array<StatusBarItemConfig>>('applicationCommands');
-    if (applicationCommands) {
-      this.commands.push(...applicationCommands.map(configEntry => this.createCommand(configEntry)));
+    const configJson = JSON.stringify(configCommands);
+    if (this.prevConfig !== configJson) {
+      this.prevConfig = configJson;
+
+      this.disposeCommands();
+      this.commands = [];
+
+      if (configCommands) {
+        this.commands.push(...configCommands.map(configEntry => new StatusBarCommand(configEntry)));
+      }
     }
   }
 
-  private createCommand(configEntry: StatusBarItemConfig) {
-    const command = new StatusBarCommand(configEntry);
-    command.refresh(vscode.window.activeTextEditor);
-    return command;
-  }
-
-  onChangeConfiguration() : void {
-    this.refresh(vscode.window.activeTextEditor);
+  onChangeConfiguration(e: vscode.ConfigurationChangeEvent): void {
+    if (e.affectsConfiguration('statusbar_command')) {
+      this.init(vscode.window.activeTextEditor);
+    }
   }
 
   onChangeTextEditor(textEditor: vscode.TextEditor | undefined) : void {
-    if (textEditor) {
-      this.commands.forEach(command => command.refresh(textEditor));
-    }
+    this.init(textEditor);
   }
 
   private disposeCommands() {
@@ -54,5 +59,7 @@ export class CommandsController {
   }
   dispose() : void {
     this.disposeCommands();
+    this.configChangeDisposable.dispose();
+    this.changeActiveTextEditorDisposable.dispose();
   }
 }

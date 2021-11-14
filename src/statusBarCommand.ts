@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { StatusBarItemConfig } from './statusBarItemConfig';
 
-export class StatusBarCommand {
+export class StatusBarCommand implements vscode.Disposable {
+  private disposables: Array<vscode.Disposable> = [];
   private statusBarItem: vscode.StatusBarItem | undefined;
 
-  registeredCommandDisposable!: vscode.Disposable;
 
   private argumentsConverter: Record<string, (obj: string) => unknown> = {
     'activeTextEditor|': obj => {
@@ -74,40 +74,71 @@ export class StatusBarCommand {
     } else {
       this.statusBarItem = vscode.window.createStatusBarItem(alignment, config.priority);
     }
-
-    this.statusBarItem.color = config.color;
     this.statusBarItem.accessibilityInformation = config.accessibilityInformation;
     this.statusBarItem.name = config.name;
     this.statusBarItem.text = config.text;
     this.statusBarItem.tooltip = config.tooltip;
-    if (config.backgroundColor) {
-      this.statusBarItem.backgroundColor = new vscode.ThemeColor(config.backgroundColor);
-    }
+    this.statusBarItem.color = this.createThemeColor(config.color);
+    this.statusBarItem.backgroundColor = this.createThemeColor(config.backgroundColor);
+    this.initCommand(config);
 
-    if (config.arguments) {
-      this.statusBarItem.command = {
-        title: config.text,
-        command: config.command,
-        arguments: config.arguments.map((obj: unknown) => {
-          if (typeof obj === 'string') {
-            for (const [key, value] of Object.entries(this.argumentsConverter)) {
-              if (obj.startsWith(key)) {
-                return value(obj.slice(key.length));
-              }
-            }
-          }
-          return obj;
-        })
-      };
-    } else {
-      this.statusBarItem.command = config.command;
+    if (this.listensToActiveTextEditorChange) {
+      this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
     }
   }
 
-  refresh(textEditor: vscode.TextEditor | undefined): void {
+  private createThemeColor(color: string | undefined) {
+    if (color) {
+      if (color.startsWith('theme:')) {
+        return new vscode.ThemeColor(color.slice('theme:'.length));
+      }
+      if (color === 'statusBarItem.errorBackground') {
+        return new vscode.ThemeColor('statusBarItem.errorBackground');
+      }
+      if (color === 'statusBarItem.warningBackground') {
+        return new vscode.ThemeColor('statusBarItem.warningBackground');
+      }
+
+      return color;
+    }
+    return undefined;
+  }
+
+  private initCommand(config: StatusBarItemConfig) {
+    if (this.statusBarItem) {
+      if (config.arguments) {
+        this.statusBarItem.command = {
+          title: config.text,
+          command: config.command,
+          arguments: config.arguments.map((obj: unknown) => {
+            if (typeof obj === 'string') {
+              for (const [key, value] of Object.entries(this.argumentsConverter)) {
+                if (obj.startsWith(key)) {
+                  return value(obj.slice(key.length));
+                }
+              }
+            }
+            return obj;
+          })
+        };
+      } else {
+        this.statusBarItem.command = config.command;
+      }
+    }
+  }
+
+  private get listensToActiveTextEditorChange() {
+    return !!this.config.filterLanguageId
+      || !!this.config.filterFileName
+      || !!this.config.filterFilepath
+      || !!this.config.filterText
+      || !!this.config.include
+      || !!this.config.exclude;
+  }
+
+  onDidChangeActiveTextEditor(textEditor: vscode.TextEditor | undefined): void {
     let visible = true;
     if (this.statusBarItem) {
-
       if (textEditor && textEditor.document) {
         if (!this.testRegex(this.config.filterLanguageId, this.config.filterLanguageIdFlags, textEditor.document.languageId)) {
           visible = false;
@@ -144,6 +175,10 @@ export class StatusBarCommand {
   }
 
   dispose(): void {
+    for (const disposable of this.disposables) {
+      disposable.dispose();
+    }
+    this.disposables = [];
     if (this.statusBarItem) {
       this.statusBarItem.dispose();
       this.statusBarItem = undefined;
