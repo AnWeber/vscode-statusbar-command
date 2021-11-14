@@ -9,10 +9,13 @@ export class CommandsController {
   private commands: Array<StatusBarCommand> = [];
   private configChangeDisposable: vscode.Disposable;
   private changeActiveTextEditorDisposable: vscode.Disposable;
+  private logChannel: vscode.OutputChannel | undefined;
 
   private prevConfig = '';
 
-  constructor() {
+  constructor(
+    private readonly runInNewContext?: ((script: string, context: Record<string, unknown>) => void) | undefined
+  ) {
     this.configChangeDisposable = vscode.workspace.onDidChangeConfiguration(this.onChangeConfiguration, this);
     this.changeActiveTextEditorDisposable = vscode.window.onDidChangeActiveTextEditor(this.onChangeTextEditor, this);
     this.init(vscode.window.activeTextEditor);
@@ -36,7 +39,7 @@ export class CommandsController {
       this.commands = [];
 
       if (configCommands) {
-        this.commands.push(...configCommands.map(configEntry => new StatusBarCommand(configEntry)));
+        this.commands.push(...configCommands.map(configEntry => new StatusBarCommand(configEntry, this.runInNewContext, this.log.bind(this))));
       }
     }
   }
@@ -49,6 +52,26 @@ export class CommandsController {
 
   onChangeTextEditor(textEditor: vscode.TextEditor | undefined) : void {
     this.init(textEditor);
+  }
+
+  private log(...messages: Array<unknown>) {
+    if (!this.logChannel) {
+      this.logChannel = vscode.window.createOutputChannel('statusbarcommands');
+    }
+    for (const param of messages) {
+      if (param !== undefined) {
+        if (typeof param === 'string') {
+          this.logChannel.appendLine(param);
+        } else if (param instanceof Error) {
+          this.logChannel.appendLine(`${param.name} - ${param.message}`);
+          if (param.stack) {
+            this.logChannel.appendLine(param.stack);
+          }
+        } else {
+          this.logChannel.appendLine(`${JSON.stringify(param, null, 2)}`);
+        }
+      }
+    }
   }
 
   private disposeCommands() {

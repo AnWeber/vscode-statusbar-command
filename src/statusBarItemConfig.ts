@@ -133,4 +133,17 @@ export interface StatusBarItemConfig {
    * regex flags for filterText
    */
    filterTextFlags?: string;
+
+   /**
+    * events to register script execution
+    * https://code.visualstudio.com/api/references/vscode-api#Event
+    * example: vscode.workspace.onDidChangeConfiguration
+    */
+    scriptEvents?: Array<string>;
+
+    /**
+     * script to execute if event is triggered
+     * e.g. evt.affectsConfiguration('http') ? statusBarItem.text = 'http changed' : statusBarItem.text = 'http not changed'
+     */
+     script?: string;
 }

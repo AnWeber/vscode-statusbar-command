@@ -5,7 +5,6 @@ export class StatusBarCommand implements vscode.Disposable {
   private disposables: Array<vscode.Disposable> = [];
   private statusBarItem: vscode.StatusBarItem | undefined;
 
-
   private argumentsConverter: Record<string, (obj: string) => unknown> = {
     'activeTextEditor|': obj => {
       const textEditor = vscode.window.activeTextEditor;
@@ -63,7 +62,11 @@ export class StatusBarCommand implements vscode.Disposable {
     'uri|': obj => vscode.Uri.file(obj.slice('uri|'.length)),
   };
 
-  constructor(private readonly config: StatusBarItemConfig) {
+  constructor(
+    private readonly config: StatusBarItemConfig,
+    private readonly runInNewContext: ((script: string, context: Record<string, unknown>) => void) | undefined,
+    private readonly log: (...messages: Array<unknown>) => void,
+  ) {
     let alignment = vscode.StatusBarAlignment.Left;
     if (config.alignment === 'right') {
       alignment = vscode.StatusBarAlignment.Right;
@@ -84,6 +87,27 @@ export class StatusBarCommand implements vscode.Disposable {
 
     if (this.listensToActiveTextEditorChange) {
       this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
+    } else if (this.runInNewContext && config.scriptEvents && config.script) {
+      this.statusBarItem.show();
+      this.runScript(null);
+      this.registerScriptEvents(config);
+    }
+  }
+
+  private registerScriptEvents(config: StatusBarItemConfig) {
+    if (this.runInNewContext && config.scriptEvents) {
+      const eventHandlers: Array<(listener: (e: unknown) => void, obj: StatusBarCommand) => vscode.Disposable> = [];
+      try {
+        this.runInNewContext(`eventHandlers.push(${config.scriptEvents.join(', ')})`, {
+          eventHandlers,
+          vscode
+        });
+      } catch (err) {
+        this.log('error while registering event', err);
+      }
+      for (const eventHandler of eventHandlers) {
+        this.disposables.push(eventHandler(this.runScript, this));
+      }
     }
   }
 
@@ -166,6 +190,19 @@ export class StatusBarCommand implements vscode.Disposable {
         this.statusBarItem.show();
       } else {
         this.statusBarItem.hide();
+      }
+    }
+  }
+  private runScript(event: unknown) {
+    if (this.config.script && this.statusBarItem && this.runInNewContext) {
+      try {
+        this.runInNewContext(this.config.script, {
+          event,
+          statusBarItem: this.statusBarItem,
+          vscode
+        });
+      } catch (err) {
+        this.log('error while running event', err);
       }
     }
   }

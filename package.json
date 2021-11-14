@@ -34,7 +34,8 @@
         "untrustedWorkspaces": {
             "supported": "limited",
             "restrictedConfigurations": [
-                "statusbar_command.commands"
+                "statusbar_command.commands",
+                "statusbar_command.applicationCommands"
             ]
         }
     },
@@ -165,6 +166,14 @@
                             "filterTextFlags": {
                                 "type": "string",
                                 "description": "regex pattern for filterText"
+                            },
+                            "scriptEvents": {
+                                "type": "array",
+                                "description": "list of events."
+                            },
+                            "script": {
+                                "type": "string",
+                                "description": "script to execute if event is triggered."
                             }
                         },
                         "required": [
@@ -286,6 +295,14 @@
                             "filterTextFlags": {
                                 "type": "string",
                                 "description": "regex pattern for filterText"
+                            },
+                            "scriptEvents": {
+                                "type": "array",
+                                "description": "list of events."
+                            },
+                            "script": {
+                                "type": "string",
+                                "description": "script to execute if event is triggered."
                             }
                         },
                         "required": [
@@ -298,9 +315,11 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run compile && npm run compile-web",
-        "compile": "esbuild ./src/extension.ts --bundle --outdir=dist/ --minify --sourcemap --platform=node --external:vscode --format=cjs",
-        "watch": "npm run compile -- --watch",
-        "compile-web": "esbuild ./src/extension.ts --bundle --outfile=dist/browser.js --sourcemap --platform=browser --format=cjs --external:vscode",
+        "esbuild": "esbuild ./src/extension.ts  --outdir=dist/  --platform=node --format=cjs --bundle --external:vscode",
+        "compile": "npm run esbuild -- --minify",
+        "watch": "npm run esbuild -- --sourcemap --watch",
+        "tsc-watch": "tsc --watch",
+        "compile-web": "esbuild ./src/browser.ts --bundle --outfile=dist/browser.js --sourcemap --platform=browser --format=cjs --external:vscode",
         "watch-web": "npm run compile-web -- --watch",
         "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
         "eslint": "eslint src --ext ts",
