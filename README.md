@@ -9,6 +9,7 @@ extend the status bar with own commands.
 
 ## Settings
 * statusbar_command.commands and statusbar_command.applicationCommands are an array of [StatusBarItemConfig](https://github.com/AnWeber/vscode-statusbar-command/blob/main/src/statusBarItemConfig.ts). Each entry is converted to a StatusBarItem.
+* You can also use the icons that VS Code provides instead of text: https://code.visualstudio.com/api/references/icons-in-labels
 
 
 ## Example
