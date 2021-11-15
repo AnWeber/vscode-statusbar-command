@@ -82,6 +82,10 @@ export class CommandsController {
   }
   dispose() : void {
     this.disposeCommands();
+    if (this.logChannel) {
+      this.logChannel.dispose();
+      delete this.logChannel;
+    }
     this.configChangeDisposable.dispose();
     this.changeActiveTextEditorDisposable.dispose();
   }

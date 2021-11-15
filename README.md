@@ -59,6 +59,13 @@ extend the status bar with own commands.
         "name": "runTask",
         "command": "workbench.action.tasks.runTask",
         "arguments": ["taskName"]
+    },{
+      "alignment": "left",
+      "command": "github.copilot.toggleCopilot",
+      "id": "sbc.copilot",
+      "text": "Github Copilot",
+      "scriptEvents": ["vscode.workspace.onDidChangeConfiguration"],
+      "script": "statusBarItem.text = vscode.workspace.getConfiguration('github.copilot.inlineSuggest').enable ? '$(github)' : '$(github-inverted)'"
     }
   ]
 }

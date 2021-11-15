@@ -84,45 +84,79 @@ export class StatusBarCommand implements vscode.Disposable {
     this.statusBarItem.color = this.createThemeColor(config.color);
     this.statusBarItem.backgroundColor = this.createThemeColor(config.backgroundColor);
     this.initCommand(config);
-
+    this.statusBarItem.show();
     if (this.listensToActiveTextEditorChange) {
       this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
-    } else if (this.runInNewContext && config.scriptEvents && config.script) {
-      this.statusBarItem.show();
-      this.runScript(null);
-      this.registerScriptEvents(config);
+    } else if (config.scriptEvents && config.script) {
+      if (this.runInNewContext) {
+        this.registerScriptEvents(config);
+      } else {
+        this.statusBarItem.hide();
+      }
     }
   }
 
   private registerScriptEvents(config: StatusBarItemConfig) {
-    if (this.runInNewContext && config.scriptEvents) {
-      const eventHandlers: Array<(listener: (e: unknown) => void, obj: StatusBarCommand) => vscode.Disposable> = [];
+    if (this.runInNewContext && config.scriptEvents && config.script) {
+
+      const script = `
+        function runScript(event){
+          try{
+            ${config.script}
+            validateStatusBarItem();
+          }catch(err){
+            log(err);
+          }
+        }
+        disposables.push(${config.scriptEvents.map(obj => `${obj}(runScript)`).join(', ')});
+        runScript();
+      `;
       try {
-        this.runInNewContext(`eventHandlers.push(${config.scriptEvents.join(', ')})`, {
-          eventHandlers,
+        this.runInNewContext(script, {
+          disposables: this.disposables,
+          statusBarItem: this.statusBarItem,
+          validateStatusBarItem: this.validateStatusBarItem.bind(this),
+          log: this.log,
           vscode
         });
       } catch (err) {
         this.log('error while registering event', err);
       }
-      for (const eventHandler of eventHandlers) {
-        this.disposables.push(eventHandler(this.runScript, this));
-      }
     }
   }
 
-  private createThemeColor(color: string | undefined) {
-    if (color) {
-      if (color.startsWith('theme:')) {
-        return new vscode.ThemeColor(color.slice('theme:'.length));
-      }
-      if (color === 'statusBarItem.errorBackground') {
-        return new vscode.ThemeColor('statusBarItem.errorBackground');
-      }
-      if (color === 'statusBarItem.warningBackground') {
-        return new vscode.ThemeColor('statusBarItem.warningBackground');
-      }
+  private validateStatusBarItem() {
+    if (this.statusBarItem) {
+      this.statusBarItem.text = this.getSafeString(this.statusBarItem.text, '$(question)');
+      this.statusBarItem.tooltip = this.getSafeString(this.statusBarItem.tooltip, '');
+      this.statusBarItem.color = this.createThemeColor(this.statusBarItem.color);
+      this.statusBarItem.backgroundColor = this.createThemeColor(this.statusBarItem.backgroundColor);
+    }
+  }
 
+  private getSafeString(obj: unknown, defaultValue: string) {
+    if (typeof obj !== 'undefined') {
+      if (typeof obj !== 'string') {
+        return `${obj}`;
+      }
+      return obj;
+    }
+    return defaultValue;
+  }
+
+  private createThemeColor(color: string| vscode.ThemeColor | undefined) {
+    if (color) {
+      if (typeof color === 'string') {
+        if (color.startsWith('theme:')) {
+          return new vscode.ThemeColor(color.slice('theme:'.length));
+        }
+        if (color === 'statusBarItem.errorBackground') {
+          return new vscode.ThemeColor('statusBarItem.errorBackground');
+        }
+        if (color === 'statusBarItem.warningBackground') {
+          return new vscode.ThemeColor('statusBarItem.warningBackground');
+        }
+      }
       return color;
     }
     return undefined;
@@ -190,19 +224,6 @@ export class StatusBarCommand implements vscode.Disposable {
         this.statusBarItem.show();
       } else {
         this.statusBarItem.hide();
-      }
-    }
-  }
-  private runScript(event: unknown) {
-    if (this.config.script && this.statusBarItem && this.runInNewContext) {
-      try {
-        this.runInNewContext(this.config.script, {
-          event,
-          statusBarItem: this.statusBarItem,
-          vscode
-        });
-      } catch (err) {
-        this.log('error while running event', err);
       }
     }
   }
