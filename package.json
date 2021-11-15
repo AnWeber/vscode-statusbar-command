@@ -320,7 +320,7 @@
         "watch": "npm run esbuild -- --sourcemap --watch",
         "tsc-watch": "tsc --watch",
         "esbuild-web": "esbuild ./src/browser.ts --bundle --outfile=dist/browser.js --sourcemap --platform=browser --format=cjs --external:vscode",
-        "complie-web": "npm run esbuild-web -- --minify",
+        "compile-web": "npm run esbuild-web -- --minify",
         "watch-web": "npm run esbuild-web -- --watch",
         "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
         "eslint": "eslint src --ext ts",
