@@ -1,3 +1,6 @@
+## v2.2.1
+* fix regex patterns (include, exclude,...) not considered on startup (#19)
+
 ## v2.2.0
 * add script and scriptEvents support
   * scriptsEvents is a list ov [vscode events](https://code.visualstudio.com/api/references/vscode-api#Event%3CT%3E) to which is subscribed to

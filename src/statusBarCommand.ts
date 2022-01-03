@@ -87,10 +87,9 @@ export class StatusBarCommand implements vscode.Disposable {
     this.statusBarItem.show();
     if (this.listensToActiveTextEditorChange) {
       this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
+      this.onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     } else if (config.scriptEvents && config.script) {
-      if (this.runInNewContext) {
-        this.registerScriptEvents(config);
-      } else {
+      if (!this.registerScriptEvents(config)) {
         this.statusBarItem.hide();
       }
     }
@@ -119,10 +118,12 @@ export class StatusBarCommand implements vscode.Disposable {
           log: this.log,
           vscode
         });
+        return true;
       } catch (err) {
         this.log('error while registering event', err);
       }
     }
+    return false;
   }
 
   private validateStatusBarItem() {
@@ -194,7 +195,7 @@ export class StatusBarCommand implements vscode.Disposable {
       || !!this.config.exclude;
   }
 
-  onDidChangeActiveTextEditor(textEditor: vscode.TextEditor | undefined): void {
+  private onDidChangeActiveTextEditor(textEditor: vscode.TextEditor | undefined): void {
     let visible = true;
     if (this.statusBarItem) {
       if (textEditor && textEditor.document) {
