@@ -137,7 +137,7 @@
                             },
                             "filterLanguageId": {
                                 "type": "string",
-                                "description": "if regex match languageid"
+                                "description": "if regex match languageId"
                             },
                             "filterLanguageIdFlags": {
                                 "type": "string",
@@ -266,7 +266,7 @@
                             },
                             "filterLanguageId": {
                                 "type": "string",
-                                "description": "if regex match languageid"
+                                "description": "if regex match languageId"
                             },
                             "filterLanguageIdFlags": {
                                 "type": "string",
@@ -319,21 +319,21 @@
         "compile": "npm run esbuild -- --minify",
         "watch": "npm run esbuild -- --sourcemap --watch",
         "tsc-watch": "tsc --watch",
-        "esbuild-web": "esbuild ./src/browser.ts --bundle --outfile=dist/browser.js --sourcemap --platform=browser --format=cjs --external:vscode",
+        "esbuild-web": "esbuild ./src/browser.ts --bundle --outfile=dist/browser.js --platform=browser --format=cjs --external:vscode",
         "compile-web": "npm run esbuild-web -- --minify",
-        "watch-web": "npm run esbuild-web -- --watch",
+        "watch-web": "npm run esbuild-web -- --sourcemap --watch",
         "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
         "eslint": "eslint src --ext ts",
         "lint": "npm run eslint && npm run lockfile-lint"
     },
     "devDependencies": {
-        "@types/node": "^16.11.7",
+        "@types/node": "^17.0.7",
         "@types/vscode": "^1.61.0",
-        "@typescript-eslint/eslint-plugin": "^5.3.1",
-        "@typescript-eslint/parser": "^5.3.1",
-        "esbuild": "^0.13.13",
-        "eslint": "^8.2.0",
+        "@typescript-eslint/eslint-plugin": "^5.8.1",
+        "@typescript-eslint/parser": "^5.8.1",
+        "esbuild": "^0.14.10",
+        "eslint": "^8.6.0",
         "lockfile-lint": "^4.6.2",
-        "typescript": "^4.4.4"
+        "typescript": "^4.5.4"
     }
 }
