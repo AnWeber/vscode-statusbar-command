@@ -1,3 +1,6 @@
+## v2.3.0
+* allow require calls in script region (#21)
+
 ## v2.2.1
 * fix regex patterns (include, exclude,...) not considered on startup (#19)
 
