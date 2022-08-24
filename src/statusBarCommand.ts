@@ -200,23 +200,29 @@ export class StatusBarCommand implements vscode.Disposable {
     if (this.statusBarItem) {
       if (textEditor && textEditor.document) {
         if (!this.testRegex(this.config.filterLanguageId, this.config.filterLanguageIdFlags, textEditor.document.languageId)) {
+          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterLanguageId: ${textEditor.document.languageId}!=${this.config.filterLanguageId}`);
           visible = false;
         }
         if (!this.testRegex(this.config.filterFileName, this.config.filterFileNameFlags, textEditor.document.fileName)) {
+          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterFileName: ${textEditor.document.fileName}!=${this.config.filterFileName}`);
           visible = false;
         }
         if (!this.testRegex(this.config.filterFilepath, this.config.filterFilepathFlags, textEditor.document.uri.fsPath)) {
+          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterFilepath: ${textEditor.document.uri.fsPath}!=${this.config.filterFilepath}`);
           visible = false;
         }
         if (!this.testRegex(this.config.filterText, this.config.filterTextFlags, textEditor.document.getText())) {
+          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterText`);
           visible = false;
         }
 
         const documentUri = textEditor?.document?.uri?.toString();
         if (!this.testRegex(this.config.include, this.config.includeFlags, documentUri)) {
+          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match include: ${documentUri}`);
           visible = false;
         }
         if (this.config.exclude && this.testRegex(this.config.exclude, this.config.excludeFlags, documentUri)) {
+          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match exclude: ${documentUri}`);
           visible = false;
         }
       }
