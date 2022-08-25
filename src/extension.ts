@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext): void {
             },
             Object.getOwnPropertyDescriptors(global),
           ),
-          { vscode },
+          { vscode, require },
           context,
         )
       ));
