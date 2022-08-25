@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {

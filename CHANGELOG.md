@@ -1,3 +1,6 @@
+## v2.3.1
+* fix issue with access to require in script (#21)
+
 ## v2.3.0
 * allow require calls in script region (#21)
 
