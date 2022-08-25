@@ -62,7 +62,7 @@ export class CommandsController {
       if (param !== undefined) {
         if (typeof param === 'string') {
           this.logChannel.appendLine(param);
-        } else if (param instanceof Error) {
+        } else if (this.isError(param)) {
           this.logChannel.appendLine(`${param.name} - ${param.message}`);
           if (param.stack) {
             this.logChannel.appendLine(param.stack);
@@ -72,6 +72,17 @@ export class CommandsController {
         }
       }
     }
+  }
+
+  private isError(val: unknown): val is Error {
+    if (!val) {
+      return false;
+    }
+    if (val instanceof Error) {
+      return true;
+    }
+    const err = val as Error;
+    return !!err.message && !!err.stack && !!err.name;
   }
 
   private disposeCommands() {
