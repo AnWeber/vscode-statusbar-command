@@ -318,7 +318,7 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile && npm run compile-web",
+        "vscode:prepublish": "npm run compile",
         "esbuild": "esbuild ./src/extension.ts  --outdir=dist/  --platform=node --format=cjs --bundle --external:vscode",
         "compile": "npm run esbuild -- --minify",
         "watch": "npm run esbuild -- --sourcemap --watch",
