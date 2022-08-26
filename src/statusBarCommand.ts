@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { StatusBarItemConfig } from './statusBarItemConfig';
 
@@ -88,7 +89,7 @@ export class StatusBarCommand implements vscode.Disposable {
     if (this.listensToActiveTextEditorChange) {
       this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
       this.onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    } else if (config.scriptEvents && config.script) {
+    } else if (config.scriptEvents && (config.script || config.scriptFile)) {
       if (!this.registerScriptEvents(config)) {
         this.statusBarItem.hide();
       }
@@ -96,7 +97,11 @@ export class StatusBarCommand implements vscode.Disposable {
   }
 
   private registerScriptEvents(config: StatusBarItemConfig) {
-    if (this.runInNewContext && config.scriptEvents && config.script) {
+    if (this.runInNewContext && config.scriptEvents && (config.script || config.scriptFile)) {
+
+      if (config.scriptFile) {
+        config.script = fs.readFileSync(config.scriptFile, {encoding: 'utf-8'});
+      }
 
       const script = `
         function runScript(event){
