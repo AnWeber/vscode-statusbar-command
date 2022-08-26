@@ -146,4 +146,9 @@ export interface StatusBarItemConfig {
      * e.g. evt.affectsConfiguration('http') ? statusBarItem.text = 'http changed' : statusBarItem.text = 'http not changed'
      */
      script?: string;
+
+     /**
+      * File to read script from
+      */
+     scriptFile?: string;
 }
