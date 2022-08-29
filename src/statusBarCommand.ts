@@ -100,7 +100,11 @@ export class StatusBarCommand implements vscode.Disposable {
     if (this.runInNewContext && config.scriptEvents && (config.script || config.scriptFile)) {
 
       if (config.scriptFile) {
-        config.script = fs.readFileSync(config.scriptFile, {encoding: 'utf-8'});
+        try {
+          config.script = fs.readFileSync(config.scriptFile, { encoding: 'utf-8' });
+        } catch (err) {
+          this.log(err);
+        }
       }
 
       const script = `
