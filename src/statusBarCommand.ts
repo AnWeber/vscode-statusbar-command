@@ -4,6 +4,7 @@ import { StatusBarItemConfig } from './statusBarItemConfig';
 
 export class StatusBarCommand implements vscode.Disposable {
   private disposables: Array<vscode.Disposable> = [];
+  private scriptEventDisposables: Array<vscode.Disposable> = [];
   private statusBarItem: vscode.StatusBarItem | undefined;
 
   private argumentsConverter: Record<string, (obj: string) => unknown> = {
@@ -90,8 +91,15 @@ export class StatusBarCommand implements vscode.Disposable {
       this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
       this.onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     } else if (config.scriptEvents && (config.script || config.scriptFile)) {
-      if (!this.registerScriptEvents(config)) {
-        this.statusBarItem.hide();
+      const registerScriptEvents = () => {
+        if (!this.registerScriptEvents(config)) {
+          this.statusBarItem.hide();
+        }
+      };
+      registerScriptEvents();
+      if (config.scriptFile) {
+        const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(config.scriptFile, '*'));
+        this.disposables.push(watcher.onDidChange(registerScriptEvents, this));
       }
     }
   }
@@ -124,9 +132,10 @@ export class StatusBarCommand implements vscode.Disposable {
         disposables.push(${config.scriptEvents.map(obj => `${obj}(runScript)`).join(', ')});
         runScript();
       `;
+      this.scriptEventDisposables = [];
       try {
         this.runInNewContext(script, {
-          disposables: this.disposables,
+          disposables: this.scriptEventDisposables,
           statusBarItem: this.statusBarItem,
           validateStatusBarItem: this.validateStatusBarItem.bind(this),
           log: this.log,
@@ -255,6 +264,9 @@ export class StatusBarCommand implements vscode.Disposable {
 
   dispose(): void {
     for (const disposable of this.disposables) {
+      disposable.dispose();
+    }
+    for (const disposable of this.scriptEventDisposables) {
       disposable.dispose();
     }
     this.disposables = [];
