@@ -92,6 +92,10 @@ export class StatusBarCommand implements vscode.Disposable {
       this.onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     } else if (config.scriptEvents && (config.script || config.scriptFile)) {
       const registerScriptEvents = () => {
+        for (const disposable of this.scriptEventDisposables) {
+          disposable.dispose();
+        }
+        this.scriptEventDisposables = [];
         if (!this.registerScriptEvents(config)) {
           this.statusBarItem.hide();
         }
@@ -132,7 +136,6 @@ export class StatusBarCommand implements vscode.Disposable {
         disposables.push(${config.scriptEvents.map(obj => `${obj}(runScript)`).join(', ')});
         runScript();
       `;
-      this.scriptEventDisposables = [];
       try {
         this.runInNewContext(script, {
           disposables: this.scriptEventDisposables,
