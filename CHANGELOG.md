@@ -1,3 +1,6 @@
+## v2.4.0
+* add new config option scriptFile
+
 ## v2.3.1
 * fix issue with access to require in script (#21)
 
