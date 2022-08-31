@@ -169,15 +169,15 @@
                             },
                             "scriptEvents": {
                                 "type": "array",
-                                "description": "list of events."
+                                "description": "list of events"
                             },
                             "script": {
                                 "type": "string",
-                                "description": "script to execute if event is triggered."
+                                "description": "script to execute if event is triggered"
                             },
                             "scriptFile": {
                                 "type": "string",
-                                "description": "File to read script from."
+                                "description": "Path to the javascript script file"
                             }
                         },
                         "required": [
@@ -302,11 +302,15 @@
                             },
                             "scriptEvents": {
                                 "type": "array",
-                                "description": "list of events."
+                                "description": "list of events"
                             },
                             "script": {
                                 "type": "string",
-                                "description": "script to execute if event is triggered."
+                                "description": "script to execute if event is triggered"
+                            },
+                            "scriptFile": {
+                                "type": "string",
+                                "description": "Path to the javascript script file"
                             }
                         },
                         "required": [
@@ -318,7 +322,7 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "npm run compile && npm run compile-web",
         "esbuild": "esbuild ./src/extension.ts  --outdir=dist/  --platform=node --format=cjs --bundle --external:vscode",
         "compile": "npm run esbuild -- --minify",
         "watch": "npm run esbuild -- --sourcemap --watch",

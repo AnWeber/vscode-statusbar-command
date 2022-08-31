@@ -24,7 +24,7 @@ export class CommandsController {
   /**
    * refresh config
    */
-  public init(textEditor: vscode.TextEditor | undefined): void {
+  public async init(textEditor: vscode.TextEditor | undefined): Promise<void> {
     const config = vscode.workspace.getConfiguration('statusbar_command', textEditor?.document?.uri);
     const configCommands = [
       ...config.get<Array<StatusBarItemConfig>>('commands') || [],
@@ -39,19 +39,21 @@ export class CommandsController {
       this.commands = [];
 
       if (configCommands) {
-        this.commands.push(...configCommands.map(configEntry => new StatusBarCommand(configEntry, this.runInNewContext, this.log.bind(this))));
+        for (const config of configCommands) {
+          this.commands.push(await StatusBarCommand.create(config, this.runInNewContext, this.log.bind(this)));
+        }
       }
     }
   }
 
-  onChangeConfiguration(e: vscode.ConfigurationChangeEvent): void {
+  async onChangeConfiguration(e: vscode.ConfigurationChangeEvent): Promise<void> {
     if (e.affectsConfiguration('statusbar_command')) {
-      this.init(vscode.window.activeTextEditor);
+      await this.init(vscode.window.activeTextEditor);
     }
   }
 
-  onChangeTextEditor(textEditor: vscode.TextEditor | undefined) : void {
-    this.init(textEditor);
+  async onChangeTextEditor(textEditor: vscode.TextEditor | undefined): Promise<void> {
+    await this.init(textEditor);
   }
 
   private log(...messages: Array<unknown>) {
@@ -87,7 +89,13 @@ export class CommandsController {
 
   private disposeCommands() {
     if (this.commands) {
-      this.commands.forEach(command => command.dispose());
+      for (const command of this.commands) {
+        try {
+          command.dispose();
+        } catch (err) {
+          this.log(err);
+        }
+      }
       this.commands = [];
     }
   }

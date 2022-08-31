@@ -1,11 +1,9 @@
-import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { StatusBarItemConfig } from './statusBarItemConfig';
 
 export class StatusBarCommand implements vscode.Disposable {
-  private disposables: Array<vscode.Disposable> = [];
-  private scriptEventDisposables: Array<vscode.Disposable> = [];
-  private statusBarItem: vscode.StatusBarItem | undefined;
+  private eventDisposables: Array<vscode.Disposable> = [];
+  private statusBarItem: vscode.StatusBarItem;
 
   private argumentsConverter: Record<string, (obj: string) => unknown> = {
     'activeTextEditor|': obj => {
@@ -64,7 +62,7 @@ export class StatusBarCommand implements vscode.Disposable {
     'uri|': obj => vscode.Uri.file(obj.slice('uri|'.length)),
   };
 
-  constructor(
+  private constructor(
     private readonly config: StatusBarItemConfig,
     private readonly runInNewContext: ((script: string, context: Record<string, unknown>) => void) | undefined,
     private readonly log: (...messages: Array<unknown>) => void,
@@ -73,7 +71,6 @@ export class StatusBarCommand implements vscode.Disposable {
     if (config.alignment === 'right') {
       alignment = vscode.StatusBarAlignment.Right;
     }
-
     if (config.id) {
       this.statusBarItem = vscode.window.createStatusBarItem(config.id, alignment, config.priority);
     } else {
@@ -87,38 +84,47 @@ export class StatusBarCommand implements vscode.Disposable {
     this.statusBarItem.backgroundColor = this.createThemeColor(config.backgroundColor);
     this.initCommand(config);
     this.statusBarItem.show();
+  }
+
+  public static async create(
+    config: StatusBarItemConfig,
+    runInNewContext: ((script: string, context: Record<string, unknown>) => void) | undefined,
+    log: (...messages: Array<unknown>) => void) {
+
+    const statusBarCommand = new StatusBarCommand(config, runInNewContext, log);
+    await statusBarCommand.initEvents();
+    return statusBarCommand;
+  }
+
+  private async initEvents() {
     if (this.listensToActiveTextEditorChange) {
-      this.disposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
+      this.eventDisposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
       this.onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    } else if (config.scriptEvents && (config.script || config.scriptFile)) {
-      const registerScriptEvents = () => {
-        for (const disposable of this.scriptEventDisposables) {
-          disposable.dispose();
+    } else if (this.config.scriptEvents && (this.config.script || this.config.scriptFile)) {
+      const initScriptEvents = async () => {
+        this.resetEvents();
+        if (this.config.scriptFile) {
+          try {
+            this.config.script = Buffer.from(await vscode.workspace.fs.readFile(vscode.Uri.file(this.config.scriptFile))).toString('utf-8');
+          } catch (err) {
+            this.log(`Error reading File ${this.config.scriptFile}`);
+            this.log(err);
+          }
+          const watcher = vscode.workspace.createFileSystemWatcher(this.config.scriptFile);
+          this.eventDisposables.push(watcher.onDidChange(initScriptEvents, this));
+          this.eventDisposables.push(watcher);
         }
-        this.scriptEventDisposables = [];
-        if (!this.registerScriptEvents(config)) {
-          this.statusBarItem.hide();
+        if (!this.registerScriptEvents()) {
+          this.statusBarItem?.hide();
         }
       };
-      registerScriptEvents();
-      if (config.scriptFile) {
-        const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(config.scriptFile, '*'));
-        this.disposables.push(watcher.onDidChange(registerScriptEvents, this));
-      }
+
+      await initScriptEvents();
     }
   }
 
-  private registerScriptEvents(config: StatusBarItemConfig) {
-    if (this.runInNewContext && config.scriptEvents && (config.script || config.scriptFile)) {
-
-      if (config.scriptFile) {
-        try {
-          config.script = fs.readFileSync(config.scriptFile, { encoding: 'utf-8' });
-        } catch (err) {
-          this.log(err);
-        }
-      }
-
+  private async registerScriptEvents() {
+    if (this.runInNewContext && this.config.scriptEvents && this.config.script) {
       const script = `
         function runScript(event){
           try{
@@ -127,18 +133,18 @@ export class StatusBarCommand implements vscode.Disposable {
             if(documentUri){
               workspaceFolder = vscode.workspace.getWorkspaceFolder(documentUri)?.uri;
             }
-            ${config.script}
+            ${this.config.script}
             validateStatusBarItem();
           }catch(err){
             log(err);
           }
         }
-        disposables.push(${config.scriptEvents.map(obj => `${obj}(runScript)`).join(', ')});
+        disposables.push(${this.config.scriptEvents.map(obj => `${obj}(runScript)`).join(', ')});
         runScript();
       `;
       try {
         this.runInNewContext(script, {
-          disposables: this.scriptEventDisposables,
+          disposables: this.eventDisposables,
           statusBarItem: this.statusBarItem,
           validateStatusBarItem: this.validateStatusBarItem.bind(this),
           log: this.log,
@@ -265,17 +271,17 @@ export class StatusBarCommand implements vscode.Disposable {
     return !pattern || value && RegExp(pattern, flags || 'u').test(value);
   }
 
+  resetEvents() {
+    for (const disposable of this.eventDisposables) {
+      disposable.dispose();
+    }
+    this.eventDisposables = [];
+  }
+
   dispose(): void {
-    for (const disposable of this.disposables) {
-      disposable.dispose();
-    }
-    for (const disposable of this.scriptEventDisposables) {
-      disposable.dispose();
-    }
-    this.disposables = [];
     if (this.statusBarItem) {
       this.statusBarItem.dispose();
-      this.statusBarItem = undefined;
     }
+    this.resetEvents();
   }
 }
