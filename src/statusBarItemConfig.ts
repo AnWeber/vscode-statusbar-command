@@ -1,10 +1,9 @@
 import { AccessibilityInformation } from 'vscode';
 
 export interface StatusBarItemConfig {
-
   /**
-  * The alignment of this item (default: left)
-  */
+   * The alignment of this item (default: left)
+   */
   alignment?: 'left' | 'right';
 
   /**
@@ -63,7 +62,6 @@ export interface StatusBarItemConfig {
    */
   command: string;
 
-
   /**
    * Arguments that the command handler should be invoked with.
    */
@@ -82,7 +80,7 @@ export interface StatusBarItemConfig {
   /**
    * regex flags for include
    */
-   includeFlags?: string;
+  includeFlags?: string;
 
   /**
    * if RegEx is valid, then the StatusbarItem is hidden
@@ -92,7 +90,7 @@ export interface StatusBarItemConfig {
   /**
    * regex flags for exclude
    */
-   excludeFlags?: string;
+  excludeFlags?: string;
 
   /**
    * if regex match languageid
@@ -102,7 +100,7 @@ export interface StatusBarItemConfig {
   /**
    * regex flags for filterLanguageId
    */
-   filterLanguageIdFlags?: string;
+  filterLanguageIdFlags?: string;
 
   /**
    * if regex match filename
@@ -112,7 +110,7 @@ export interface StatusBarItemConfig {
   /**
    * regex flags for filterFileName
    */
-   filterFileNameFlags?: string;
+  filterFileNameFlags?: string;
 
   /**
    * if regex match filepath
@@ -132,23 +130,23 @@ export interface StatusBarItemConfig {
   /**
    * regex flags for filterText
    */
-   filterTextFlags?: string;
+  filterTextFlags?: string;
 
-   /**
-    * events to register script execution
-    * https://code.visualstudio.com/api/references/vscode-api#Event
-    * example: vscode.workspace.onDidChangeConfiguration
-    */
-    scriptEvents?: Array<string>;
+  /**
+   * events to register script execution
+   * https://code.visualstudio.com/api/references/vscode-api#Event
+   * example: vscode.workspace.onDidChangeConfiguration
+   */
+  scriptEvents?: Array<string>;
 
-    /**
-     * script to execute if event is triggered
-     * e.g. evt.affectsConfiguration('http') ? statusBarItem.text = 'http changed' : statusBarItem.text = 'http not changed'
-     */
-     script?: string;
+  /**
+   * script to execute if event is triggered
+   * e.g. evt.affectsConfiguration('http') ? statusBarItem.text = 'http changed' : statusBarItem.text = 'http not changed'
+   */
+  script?: string;
 
-     /**
-      * File to read script from
-      */
-     scriptFile?: string;
+  /**
+   * File to read script from
+   */
+  scriptFile?: string;
 }

@@ -322,8 +322,9 @@
         }
     },
     "scripts": {
+        "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\"",
         "vscode:prepublish": "npm run compile && npm run compile-web",
-        "esbuild": "esbuild ./src/extension.ts  --outdir=dist/  --platform=node --format=cjs --bundle --external:vscode",
+        "esbuild": "esbuild ./src/extension.ts --bundle --outdir=dist/ --sourcemap --platform=node --external:vscode --format=cjs",
         "compile": "npm run esbuild -- --minify",
         "watch": "npm run esbuild -- --sourcemap --watch",
         "tsc-watch": "tsc --watch",
@@ -332,7 +333,18 @@
         "watch-web": "npm run esbuild-web -- --sourcemap --watch",
         "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
         "eslint": "eslint src --ext ts",
-        "lint": "npm run eslint && npm run lockfile-lint"
+        "lint": "npm run format && npm run eslint && npm run lockfile-lint && tsc --noEmit",
+        "prepare": "husky install",
+        "package": "npx vsce package"
+    },
+    "lint-staged": {
+      "*.js": [
+        "prettier --write"
+      ],
+      "*.ts?(x)": [
+        "eslint --cache --fix",
+        "prettier --parser=typescript --write"
+      ]
     },
     "devDependencies": {
         "@types/node": "^18.7.13",
@@ -341,7 +353,11 @@
         "@typescript-eslint/parser": "5.33.0",
         "esbuild": "^0.15.5",
         "eslint": "^8.22.0",
+        "eslint-config-prettier": "^8.5.0",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
         "lockfile-lint": "^4.8.0",
+        "prettier": "^2.7.1",
         "typescript": "^4.7.4"
     }
 }

@@ -65,7 +65,7 @@ export class StatusBarCommand implements vscode.Disposable {
   private constructor(
     private readonly config: StatusBarItemConfig,
     private readonly runInNewContext: ((script: string, context: Record<string, unknown>) => void) | undefined,
-    private readonly log: (...messages: Array<unknown>) => void,
+    private readonly log: (...messages: Array<unknown>) => void
   ) {
     let alignment = vscode.StatusBarAlignment.Left;
     if (config.alignment === 'right') {
@@ -89,8 +89,8 @@ export class StatusBarCommand implements vscode.Disposable {
   public static async create(
     config: StatusBarItemConfig,
     runInNewContext: ((script: string, context: Record<string, unknown>) => void) | undefined,
-    log: (...messages: Array<unknown>) => void) {
-
+    log: (...messages: Array<unknown>) => void
+  ) {
     const statusBarCommand = new StatusBarCommand(config, runInNewContext, log);
     await statusBarCommand.initEvents();
     return statusBarCommand;
@@ -105,7 +105,9 @@ export class StatusBarCommand implements vscode.Disposable {
         this.resetEvents();
         if (this.config.scriptFile) {
           try {
-            this.config.script = Buffer.from(await vscode.workspace.fs.readFile(vscode.Uri.file(this.config.scriptFile))).toString('utf-8');
+            this.config.script = Buffer.from(
+              await vscode.workspace.fs.readFile(vscode.Uri.file(this.config.scriptFile))
+            ).toString('utf-8');
           } catch (err) {
             this.log(`Error reading File ${this.config.scriptFile}`);
             this.log(err);
@@ -148,7 +150,7 @@ export class StatusBarCommand implements vscode.Disposable {
           statusBarItem: this.statusBarItem,
           validateStatusBarItem: this.validateStatusBarItem.bind(this),
           log: this.log,
-          vscode
+          vscode,
         });
         return true;
       } catch (err) {
@@ -177,7 +179,7 @@ export class StatusBarCommand implements vscode.Disposable {
     return defaultValue;
   }
 
-  private createThemeColor(color: string| vscode.ThemeColor | undefined) {
+  private createThemeColor(color: string | vscode.ThemeColor | undefined) {
     if (color) {
       if (typeof color === 'string') {
         if (color.startsWith('theme:')) {
@@ -210,7 +212,7 @@ export class StatusBarCommand implements vscode.Disposable {
               }
             }
             return obj;
-          })
+          }),
         };
       } else {
         this.statusBarItem.command = config.command;
@@ -219,28 +221,52 @@ export class StatusBarCommand implements vscode.Disposable {
   }
 
   private get listensToActiveTextEditorChange() {
-    return !!this.config.filterLanguageId
-      || !!this.config.filterFileName
-      || !!this.config.filterFilepath
-      || !!this.config.filterText
-      || !!this.config.include
-      || !!this.config.exclude;
+    return (
+      !!this.config.filterLanguageId ||
+      !!this.config.filterFileName ||
+      !!this.config.filterFilepath ||
+      !!this.config.filterText ||
+      !!this.config.include ||
+      !!this.config.exclude
+    );
   }
 
   private onDidChangeActiveTextEditor(textEditor: vscode.TextEditor | undefined): void {
     let visible = true;
     if (this.statusBarItem) {
       if (textEditor && textEditor.document) {
-        if (!this.testRegex(this.config.filterLanguageId, this.config.filterLanguageIdFlags, textEditor.document.languageId)) {
-          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterLanguageId: ${textEditor.document.languageId}!=${this.config.filterLanguageId}`);
+        if (
+          !this.testRegex(
+            this.config.filterLanguageId,
+            this.config.filterLanguageIdFlags,
+            textEditor.document.languageId
+          )
+        ) {
+          this.log(
+            `${this.statusBarItem.id || this.statusBarItem.command} does not match filterLanguageId: ${
+              textEditor.document.languageId
+            }!=${this.config.filterLanguageId}`
+          );
           visible = false;
         }
-        if (!this.testRegex(this.config.filterFileName, this.config.filterFileNameFlags, textEditor.document.fileName)) {
-          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterFileName: ${textEditor.document.fileName}!=${this.config.filterFileName}`);
+        if (
+          !this.testRegex(this.config.filterFileName, this.config.filterFileNameFlags, textEditor.document.fileName)
+        ) {
+          this.log(
+            `${this.statusBarItem.id || this.statusBarItem.command} does not match filterFileName: ${
+              textEditor.document.fileName
+            }!=${this.config.filterFileName}`
+          );
           visible = false;
         }
-        if (!this.testRegex(this.config.filterFilepath, this.config.filterFilepathFlags, textEditor.document.uri.fsPath)) {
-          this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match filterFilepath: ${textEditor.document.uri.fsPath}!=${this.config.filterFilepath}`);
+        if (
+          !this.testRegex(this.config.filterFilepath, this.config.filterFilepathFlags, textEditor.document.uri.fsPath)
+        ) {
+          this.log(
+            `${this.statusBarItem.id || this.statusBarItem.command} does not match filterFilepath: ${
+              textEditor.document.uri.fsPath
+            }!=${this.config.filterFilepath}`
+          );
           visible = false;
         }
         if (!this.testRegex(this.config.filterText, this.config.filterTextFlags, textEditor.document.getText())) {
@@ -268,7 +294,7 @@ export class StatusBarCommand implements vscode.Disposable {
   }
 
   private testRegex(pattern: string | undefined, flags: string | undefined, value: string | undefined) {
-    return !pattern || value && RegExp(pattern, flags || 'u').test(value);
+    return !pattern || (value && RegExp(pattern, flags || 'u').test(value));
   }
 
   resetEvents() {

@@ -27,8 +27,8 @@ export class CommandsController {
   public async init(textEditor: vscode.TextEditor | undefined): Promise<void> {
     const config = vscode.workspace.getConfiguration('statusbar_command', textEditor?.document?.uri);
     const configCommands = [
-      ...config.get<Array<StatusBarItemConfig>>('commands') || [],
-      ...config.get<Array<StatusBarItemConfig>>('applicationCommands') || []
+      ...(config.get<Array<StatusBarItemConfig>>('commands') || []),
+      ...(config.get<Array<StatusBarItemConfig>>('applicationCommands') || []),
     ];
 
     const configJson = JSON.stringify(configCommands);
@@ -99,7 +99,7 @@ export class CommandsController {
       this.commands = [];
     }
   }
-  dispose() : void {
+  dispose(): void {
     this.disposeCommands();
     if (this.logChannel) {
       this.logChannel.dispose();
