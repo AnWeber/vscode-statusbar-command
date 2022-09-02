@@ -74,7 +74,8 @@ export class StatusBarCommand implements vscode.Disposable {
   private async registerScriptEvents() {
     if (this.runInNewContext && this.config.scriptEvents && this.config.script) {
       const script = `
-        function runScript(event){
+      (function(){
+        async function runScript(event){
           try{
             let workspaceFolder = undefined;
             let documentUri = vscode.window.activeTextEditor?.document.uri;
@@ -88,16 +89,22 @@ export class StatusBarCommand implements vscode.Disposable {
           }
         }
         disposables.push(${this.config.scriptEvents.map(obj => `${obj}(runScript)`).join(', ')});
-        runScript();
+        exports.result = runScript();
+      })();
       `;
       try {
+        const exports: {result?: Promise<void>} = {};
         this.runInNewContext(script, {
           disposables: this.eventDisposables,
           statusBarItem: this.statusBarItem,
           validateStatusBarItem: this.validateStatusBarItem.bind(this),
           log: this.log,
           vscode,
+          exports
         });
+        if (exports.result) {
+          await exports.result;
+        }
         return true;
       } catch (err) {
         this.log('error while registering event', err);
