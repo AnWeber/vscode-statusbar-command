@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "2.5.0",
+    "version": "2.5.1",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -347,17 +347,17 @@
       ]
     },
     "devDependencies": {
-        "@types/node": "^18.7.14",
+        "@types/node": "^18.11.9",
         "@types/vscode": "^1.61.0",
-        "@typescript-eslint/eslint-plugin": "5.36.1",
-        "@typescript-eslint/parser": "5.36.1",
-        "esbuild": "^0.15.6",
-        "eslint": "^8.23.0",
+        "@typescript-eslint/eslint-plugin": "5.42.1",
+        "@typescript-eslint/parser": "5.42.1",
+        "esbuild": "^0.15.13",
+        "eslint": "^8.27.0",
         "eslint-config-prettier": "^8.5.0",
-        "husky": "^8.0.1",
+        "husky": "^8.0.2",
         "lint-staged": "^13.0.3",
-        "lockfile-lint": "^4.8.0",
+        "lockfile-lint": "^4.9.6",
         "prettier": "^2.7.1",
-        "typescript": "^4.8.2"
+        "typescript": "^4.8.4"
     }
 }

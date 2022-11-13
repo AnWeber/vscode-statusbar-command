@@ -1,3 +1,6 @@
+## v2.5.1
+* hide statusbar command with filter if no file is open
+
 ## v2.5.0
 * script is embedded in an async function to allow await
 * use [`onStartupFinished` Activation Event](https://code.visualstudio.com/api/references/activation-events#onStartupFinished) instead of `*` to allow faster startup of VSCode

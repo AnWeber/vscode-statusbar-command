@@ -236,6 +236,10 @@ export class StatusBarCommand implements vscode.Disposable {
           this.log(`${this.statusBarItem.id || this.statusBarItem.command} does not match exclude: ${documentUri}`);
           visible = false;
         }
+      } else {
+        if (this.config.filterFileName || this.config.filterFilepath || this.config.filterLanguageId || this.config.filterText || this.config.include) {
+          visible = false;
+        }
       }
 
       if (visible) {
