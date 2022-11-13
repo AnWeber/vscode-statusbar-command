@@ -1,5 +1,6 @@
-## v2.5.1
+## v2.6.0
 * hide statusbar command with filter if no file is open
+* add support to show/hide statusbarbar depending on tasks
 
 ## v2.5.0
 * script is embedded in an async function to allow await

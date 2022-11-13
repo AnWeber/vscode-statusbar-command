@@ -132,6 +132,12 @@ export interface StatusBarItemConfig {
    */
   filterTextFlags?: string;
 
+
+  /**
+   * regex to filter tasks
+   */
+   filterTasks?: string;
+
   /**
    * events to register script execution
    * https://code.visualstudio.com/api/references/vscode-api#Event

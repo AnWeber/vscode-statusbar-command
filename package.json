@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "2.5.1",
+    "version": "2.6.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -299,6 +299,10 @@
                             "filterTextFlags": {
                                 "type": "string",
                                 "description": "regex pattern for filterText"
+                            },
+                            "filterTasks": {
+                                "type": "string",
+                                "description": "regex pattern to filter tasks name"
                             },
                             "scriptEvents": {
                                 "type": "array",

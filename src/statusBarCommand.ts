@@ -5,8 +5,8 @@ import { StatusBarItemConfig } from './statusBarItemConfig';
 export class StatusBarCommand implements vscode.Disposable {
   private eventDisposables: Array<vscode.Disposable> = [];
   private statusBarItem: vscode.StatusBarItem;
-
-
+  private textEditorVisible = true;
+  private taskVisible = true;
 
   private constructor(
     private readonly config: StatusBarItemConfig,
@@ -29,7 +29,6 @@ export class StatusBarCommand implements vscode.Disposable {
     this.statusBarItem.color = this.createThemeColor(config.color);
     this.statusBarItem.backgroundColor = this.createThemeColor(config.backgroundColor);
     this.initCommand(config);
-    this.statusBarItem.show();
   }
 
   public static async create(
@@ -39,14 +38,21 @@ export class StatusBarCommand implements vscode.Disposable {
   ) {
     const statusBarCommand = new StatusBarCommand(config, runInNewContext, log);
     await statusBarCommand.initEvents();
+    statusBarCommand.visibleChanged();
     return statusBarCommand;
   }
 
   private async initEvents() {
+    await this.registerTaskFilter();
     if (this.listensToActiveTextEditorChange) {
       this.eventDisposables.push(vscode.window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this));
       this.onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    } else if (this.config.scriptEvents && (this.config.script || this.config.scriptFile)) {
+    }
+    await this.registerScriptFilter();
+  }
+
+  private async registerScriptFilter() {
+    if (this.config.scriptEvents && (this.config.script || this.config.scriptFile)) {
       const initScriptEvents = async () => {
         this.resetEvents();
         if (this.config.scriptFile) {
@@ -68,6 +74,22 @@ export class StatusBarCommand implements vscode.Disposable {
       };
 
       await initScriptEvents();
+    }
+  }
+
+  private async registerTaskFilter() {
+    if (this.config.filterTasks) {
+      const tasks = await vscode.tasks.fetchTasks();
+      const regex = new RegExp(this.config.filterTasks, 'u');
+      this.taskVisible = await tasks.some(obj => regex.test(obj.name));
+
+      this.eventDisposables.push(vscode.workspace.onDidChangeTextDocument(async (e) => {
+        if (e.document.uri.toString().includes('task.json')) {
+          const tasks = await vscode.tasks.fetchTasks();
+          this.taskVisible = await tasks.some(obj => regex.test(obj.name));
+          this.visibleChanged();
+        }
+      }));
     }
   }
 
@@ -241,12 +263,16 @@ export class StatusBarCommand implements vscode.Disposable {
           visible = false;
         }
       }
+    }
+    this.textEditorVisible = visible;
+  }
 
-      if (visible) {
-        this.statusBarItem.show();
-      } else {
-        this.statusBarItem.hide();
-      }
+
+  private visibleChanged() {
+    if (this.textEditorVisible && this.taskVisible) {
+      this.statusBarItem.show();
+    } else {
+      this.statusBarItem.hide();
     }
   }
 
