@@ -1,3 +1,6 @@
+## v2.6.1
+* fix broken visible change of include
+
 ## v2.6.0
 * hide statusbar command with filter if no file is open
 * add support to show/hide statusbarbar depending on tasks

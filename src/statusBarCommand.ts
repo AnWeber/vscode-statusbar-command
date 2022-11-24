@@ -265,6 +265,7 @@ export class StatusBarCommand implements vscode.Disposable {
       }
     }
     this.textEditorVisible = visible;
+    this.visibleChanged();
   }
 
 
