@@ -149,7 +149,7 @@ export interface StatusBarItemConfig {
    * script to execute if event is triggered
    * e.g. evt.affectsConfiguration('http') ? statusBarItem.text = 'http changed' : statusBarItem.text = 'http not changed'
    */
-  script?: string;
+  script?: string | Array<string>;
 
   /**
    * File to read script from

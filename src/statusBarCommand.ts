@@ -104,7 +104,7 @@ export class StatusBarCommand implements vscode.Disposable {
             if(documentUri){
               workspaceFolder = vscode.workspace.getWorkspaceFolder(documentUri)?.uri;
             }
-            ${this.config.script}
+            ${typeof this.config.script == 'string' ? this.config.script : this.config.script.join(';')}
             validateStatusBarItem();
           }catch(err){
             log(err);

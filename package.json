@@ -172,7 +172,10 @@
                                 "description": "list of events"
                             },
                             "script": {
-                                "type": "string",
+                                "type": [
+                                    "string",
+                                    "array"
+                                ],
                                 "description": "script to execute if event is triggered"
                             },
                             "scriptFile": {
@@ -309,7 +312,10 @@
                                 "description": "list of events"
                             },
                             "script": {
-                                "type": "string",
+                                "type": [
+                                    "string",
+                                    "array"
+                                ],
                                 "description": "script to execute if event is triggered"
                             },
                             "scriptFile": {
