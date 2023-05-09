@@ -132,11 +132,10 @@ export interface StatusBarItemConfig {
    */
   filterTextFlags?: string;
 
-
   /**
    * regex to filter tasks
    */
-   filterTasks?: string;
+  filterTasks?: string;
 
   /**
    * events to register script execution

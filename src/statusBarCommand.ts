@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { argumentsConverter } from './argumentsConverter';
 import { StatusBarItemConfig } from './statusBarItemConfig';
+import { EOL } from 'os';
 
 export class StatusBarCommand implements vscode.Disposable {
   private eventDisposables: Array<vscode.Disposable> = [];
@@ -83,13 +84,15 @@ export class StatusBarCommand implements vscode.Disposable {
       const regex = new RegExp(this.config.filterTasks, 'u');
       this.taskVisible = await tasks.some(obj => regex.test(obj.name));
 
-      this.eventDisposables.push(vscode.workspace.onDidChangeTextDocument(async (e) => {
-        if (e.document.uri.toString().includes('task.json')) {
-          const tasks = await vscode.tasks.fetchTasks();
-          this.taskVisible = await tasks.some(obj => regex.test(obj.name));
-          this.visibleChanged();
-        }
-      }));
+      this.eventDisposables.push(
+        vscode.workspace.onDidChangeTextDocument(async e => {
+          if (e.document.uri.toString().includes('task.json')) {
+            const tasks = await vscode.tasks.fetchTasks();
+            this.taskVisible = await tasks.some(obj => regex.test(obj.name));
+            this.visibleChanged();
+          }
+        })
+      );
     }
   }
 
@@ -104,7 +107,7 @@ export class StatusBarCommand implements vscode.Disposable {
             if(documentUri){
               workspaceFolder = vscode.workspace.getWorkspaceFolder(documentUri)?.uri;
             }
-            ${typeof this.config.script == 'string' ? this.config.script : this.config.script.join(';')}
+            ${typeof this.config.script === 'string' ? this.config.script : this.config.script.join(EOL)}
             validateStatusBarItem();
           }catch(err){
             log(err);
@@ -115,14 +118,14 @@ export class StatusBarCommand implements vscode.Disposable {
       })();
       `;
       try {
-        const exports: {result?: Promise<void>} = {};
+        const exports: { result?: Promise<void> } = {};
         this.runInNewContext(script, {
           disposables: this.eventDisposables,
           statusBarItem: this.statusBarItem,
           validateStatusBarItem: this.validateStatusBarItem.bind(this),
           log: this.log,
           vscode,
-          exports
+          exports,
         });
         if (exports.result) {
           await exports.result;
@@ -259,7 +262,13 @@ export class StatusBarCommand implements vscode.Disposable {
           visible = false;
         }
       } else {
-        if (this.config.filterFileName || this.config.filterFilepath || this.config.filterLanguageId || this.config.filterText || this.config.include) {
+        if (
+          this.config.filterFileName ||
+          this.config.filterFilepath ||
+          this.config.filterLanguageId ||
+          this.config.filterText ||
+          this.config.include
+        ) {
           visible = false;
         }
       }
@@ -267,7 +276,6 @@ export class StatusBarCommand implements vscode.Disposable {
     this.textEditorVisible = visible;
     this.visibleChanged();
   }
-
 
   private visibleChanged() {
     if (this.textEditorVisible && this.taskVisible) {

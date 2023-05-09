@@ -1,3 +1,6 @@
+## v2.7.0
+* support script array config setting
+
 ## v2.6.1
 * fix broken visible change of include
 

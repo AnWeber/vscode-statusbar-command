@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export const argumentsConverter : Record<string, (obj: string) => unknown> = {
+export const argumentsConverter: Record<string, (obj: string) => unknown> = {
   'activeTextEditor|': obj => {
     const textEditor = vscode.window.activeTextEditor;
     if (textEditor) {
