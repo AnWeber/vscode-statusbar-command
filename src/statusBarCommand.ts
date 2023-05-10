@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { argumentsConverter } from './argumentsConverter';
 import { StatusBarItemConfig } from './statusBarItemConfig';
-import { EOL } from 'os';
 
 export class StatusBarCommand implements vscode.Disposable {
   private eventDisposables: Array<vscode.Disposable> = [];
@@ -107,7 +106,7 @@ export class StatusBarCommand implements vscode.Disposable {
             if(documentUri){
               workspaceFolder = vscode.workspace.getWorkspaceFolder(documentUri)?.uri;
             }
-            ${typeof this.config.script === 'string' ? this.config.script : this.config.script.join(EOL)}
+            ${typeof this.config.script === 'string' ? this.config.script : this.config.script.join('\n')}
             validateStatusBarItem();
           }catch(err){
             log(err);
