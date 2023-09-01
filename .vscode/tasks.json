@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "npm",
-			"script": "compile",
+			"script": "build",
 			"problemMatcher": "$tsc-watch",
 			"isBackground": true,
 			"presentation": {

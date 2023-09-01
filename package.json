@@ -2,7 +2,7 @@
     "name": "statusbar-commands",
     "displayName": "statusbar-commands",
     "description": "extend the statusbar with own commands",
-    "version": "2.7.0",
+    "version": "2.8.0",
     "publisher": "anweber",
     "license": "ISC",
     "engines": {
@@ -44,6 +44,11 @@
             "type": "object",
             "title": "Statusbar Commands",
             "properties": {
+                "statusbar_command.commandsFile": {
+                    "type": "string",
+                    "scope": "application",
+                    "description": "path to file with commands"
+                },
                 "statusbar_command.commands": {
                     "type": [
                         "array"
@@ -333,14 +338,14 @@
     },
     "scripts": {
         "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\"",
-        "vscode:prepublish": "npm run compile && npm run compile-web",
+        "vscode:prepublish": "npm run build && npm run build-web",
         "esbuild": "esbuild ./src/extension.ts --bundle --outdir=dist/ --sourcemap --platform=node --external:vscode --format=cjs",
-        "compile": "npm run esbuild -- --minify",
-        "watch": "npm run esbuild -- --sourcemap --watch",
+        "build": "npm run esbuild -- --minify",
+        "start": "npm run esbuild -- --sourcemap --watch",
         "tsc-watch": "tsc --watch",
         "esbuild-web": "esbuild ./src/browser.ts --bundle --outfile=dist/browser.js --platform=browser --format=cjs --external:vscode",
-        "compile-web": "npm run esbuild-web -- --minify",
-        "watch-web": "npm run esbuild-web -- --sourcemap --watch",
+        "build-web": "npm run esbuild-web -- --minify",
+        "start-web": "npm run esbuild-web -- --sourcemap --watch",
         "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
         "eslint": "eslint src --ext ts",
         "lint": "npm run format && npm run eslint && npm run lockfile-lint && tsc --noEmit",
@@ -348,26 +353,26 @@
         "package": "npx vsce package"
     },
     "lint-staged": {
-      "*.js": [
-        "prettier --write"
-      ],
-      "*.ts?(x)": [
-        "eslint --cache --fix",
-        "prettier --parser=typescript --write"
-      ]
+        "*.js": [
+            "prettier --write"
+        ],
+        "*.ts?(x)": [
+            "eslint --cache --fix",
+            "prettier --parser=typescript --write"
+        ]
     },
     "devDependencies": {
-        "@types/node": "^20.1.1",
+        "@types/node": "^20.5.7",
         "@types/vscode": "1.61.0",
-        "@typescript-eslint/eslint-plugin": "5.59.5",
-        "@typescript-eslint/parser": "5.59.5",
-        "esbuild": "^0.17.18",
-        "eslint": "^8.40.0",
-        "eslint-config-prettier": "^8.8.0",
+        "@typescript-eslint/eslint-plugin": "6.5.0",
+        "@typescript-eslint/parser": "6.5.0",
+        "esbuild": "^0.19.2",
+        "eslint": "^8.48.0",
+        "eslint-config-prettier": "^9.0.0",
         "husky": "^8.0.3",
-        "lint-staged": "^13.2.2",
-        "lockfile-lint": "^4.10.1",
-        "prettier": "^2.8.8",
-        "typescript": "^5.0.4"
+        "lint-staged": "^14.0.1",
+        "lockfile-lint": "^4.12.1",
+        "prettier": "^3.0.3",
+        "typescript": "^5.2.2"
     }
 }

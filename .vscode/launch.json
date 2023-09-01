@@ -10,20 +10,26 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
-			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-			"outFiles": ["${workspaceFolder}/out/**/*.js"]
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}"
+			],
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js"
+			]
 		},
 		{
 			"name": "Run Browser Extension",
-      "type": "extensionHost",
-      "debugWebWorkerHost": true,
+			"type": "extensionHost",
+			"debugWebWorkerHost": true,
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionDevelopmentKind=web"
+				"--extensionDevelopmentKind=web"
 			],
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"]
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js"
+			]
 		}
 	]
 }

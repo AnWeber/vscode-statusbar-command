@@ -1,3 +1,6 @@
+## v2.8.0
+* support external file (#29)
+
 ## v2.7.0
 * support script array config setting
 

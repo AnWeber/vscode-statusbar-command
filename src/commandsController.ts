@@ -1,34 +1,56 @@
 import * as vscode from 'vscode';
 import { StatusBarCommand } from './statusBarCommand';
-import { StatusBarItemConfig } from './statusBarItemConfig';
-
+import { getConfigSetting, watchConfigSettings } from './config';
+import { DisposeProvider } from './disposeProvider';
+import { FileCommandsProvider } from './fileCommandsProvider';
 /**
  * manage initialization of Commands
  */
-export class CommandsController {
-  private commands: Array<StatusBarCommand> = [];
-  private configChangeDisposable: vscode.Disposable;
-  private changeActiveTextEditorDisposable: vscode.Disposable;
-  private logChannel: vscode.OutputChannel | undefined;
+export class CommandsController extends DisposeProvider {
+  private _commands: Array<StatusBarCommand> = [];
+  private _outputChannel: vscode.OutputChannel;
+  private fileCommandsProvider: FileCommandsProvider | undefined;
 
   private prevConfig = '';
 
   constructor(
+    private readonly toContent?: (val: Uint8Array) => string,
     private readonly runInNewContext?: ((script: string, context: Record<string, unknown>) => void) | undefined
   ) {
-    this.configChangeDisposable = vscode.workspace.onDidChangeConfiguration(this.onChangeConfiguration, this);
-    this.changeActiveTextEditorDisposable = vscode.window.onDidChangeActiveTextEditor(this.onChangeTextEditor, this);
-    this.init(vscode.window.activeTextEditor);
+    super();
+
+    this._outputChannel = vscode.window.createOutputChannel('statusbarcommands');
+    this.subscriptions.push(
+      ...[
+        watchConfigSettings(async config => {
+          const commandsFile = config.get('commandsFile');
+          if (this.fileCommandsProvider) {
+            this.fileCommandsProvider.dispose();
+            delete this.fileCommandsProvider;
+          }
+          if (commandsFile && this.toContent) {
+            this.fileCommandsProvider = new FileCommandsProvider(commandsFile, this.log.bind(this), this.toContent);
+            this.fileCommandsProvider.fileChanged.event(async () => this.refreshEditor());
+          }
+          await this.refreshEditor();
+        }),
+        vscode.window.onDidChangeActiveTextEditor(async textEditor => await this.refreshEditor(textEditor), this),
+      ],
+      this._outputChannel
+    );
   }
 
   /**
    * refresh config
    */
-  public async init(textEditor: vscode.TextEditor | undefined): Promise<void> {
-    const config = vscode.workspace.getConfiguration('statusbar_command', textEditor?.document?.uri);
+  public async refreshEditor(
+    textEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor
+  ): Promise<void> {
+    const config = getConfigSetting(textEditor?.document?.uri);
     const configCommands = [
-      ...(config.get<Array<StatusBarItemConfig>>('commands') || []),
-      ...(config.get<Array<StatusBarItemConfig>>('applicationCommands') || []),
+      ...(config.get('commands') || []),
+      ...(config.get('applicationCommands') || []),
+      ...(this.fileCommandsProvider?.fileCommands || []),
     ];
 
     const configJson = JSON.stringify(configCommands);
@@ -36,41 +58,27 @@ export class CommandsController {
       this.prevConfig = configJson;
 
       this.disposeCommands();
-      this.commands = [];
+      this._commands = [];
 
       if (configCommands) {
         for (const config of configCommands) {
-          this.commands.push(await StatusBarCommand.create(config, this.runInNewContext, this.log.bind(this)));
+          this._commands.push(await StatusBarCommand.create(config, this.runInNewContext, this.log.bind(this)));
         }
       }
     }
   }
-
-  async onChangeConfiguration(e: vscode.ConfigurationChangeEvent): Promise<void> {
-    if (e.affectsConfiguration('statusbar_command')) {
-      await this.init(vscode.window.activeTextEditor);
-    }
-  }
-
-  async onChangeTextEditor(textEditor: vscode.TextEditor | undefined): Promise<void> {
-    await this.init(textEditor);
-  }
-
   private log(...messages: Array<unknown>) {
-    if (!this.logChannel) {
-      this.logChannel = vscode.window.createOutputChannel('statusbarcommands');
-    }
     for (const param of messages) {
       if (param !== undefined) {
         if (typeof param === 'string') {
-          this.logChannel.appendLine(param);
+          this._outputChannel.appendLine(param);
         } else if (this.isError(param)) {
-          this.logChannel.appendLine(`${param.name} - ${param.message}`);
+          this._outputChannel.appendLine(`${param.name} - ${param.message}`);
           if (param.stack) {
-            this.logChannel.appendLine(param.stack);
+            this._outputChannel.appendLine(param.stack);
           }
         } else {
-          this.logChannel.appendLine(`${JSON.stringify(param, null, 2)}`);
+          this._outputChannel.appendLine(`${JSON.stringify(param, null, 2)}`);
         }
       }
     }
@@ -88,24 +96,23 @@ export class CommandsController {
   }
 
   private disposeCommands() {
-    if (this.commands) {
-      for (const command of this.commands) {
+    if (this._commands) {
+      for (const command of this._commands) {
         try {
           command.dispose();
         } catch (err) {
           this.log(err);
         }
       }
-      this.commands = [];
+      this._commands = [];
     }
   }
   dispose(): void {
+    super.dispose();
     this.disposeCommands();
-    if (this.logChannel) {
-      this.logChannel.dispose();
-      delete this.logChannel;
+    if (this.fileCommandsProvider) {
+      this.fileCommandsProvider.dispose();
+      delete this.fileCommandsProvider;
     }
-    this.configChangeDisposable.dispose();
-    this.changeActiveTextEditorDisposable.dispose();
   }
 }
